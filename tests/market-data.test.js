@@ -22,6 +22,15 @@ test('normaliza preços BRL e ignora valores inválidos', () => {
   assert.equal(MARKET_COIN_IDS.includes('cardano'), true);
 });
 
+test('não converte null ou booleano em preço válido', () => {
+  assert.equal(normalizePrices({ bitcoin: { brl: null } }), null);
+  assert.equal(normalizePrices({ bitcoin: { brl: true } }), null);
+  assert.deepEqual(
+    normalizePrices({ bitcoin: { brl: 300000, brl_24h_change: null } }),
+    { bitcoin: { brl: 300000, brl_24h_change: null } }
+  );
+});
+
 test('retorna null quando nenhum preço confiável está disponível', () => {
   assert.equal(normalizePrices({ bitcoin: { brl: 'NaN' } }), null);
   assert.equal(normalizePrices(null), null);
@@ -33,6 +42,7 @@ test('valida índice Fear & Greed no intervalo de 0 a 100', () => {
     { value: 72, label: 'Greed' }
   );
   assert.equal(normalizeFearAndGreed({ data: [{ value: '120', value_classification: 'Extreme Greed' }] }), null);
+  assert.equal(normalizeFearAndGreed({ data: [{ value: null, value_classification: 'Fear' }] }), null);
   assert.equal(normalizeFearAndGreed({ data: [] }), null);
 });
 
@@ -46,6 +56,10 @@ test('normaliza taxa de rede e câmbio sem propagar NaN', () => {
   );
   assert.deepEqual(
     normalizeNetworkStatus({ halfHourFee: 'invalid' }, { USDBRL: { bid: '0' } }),
+    { btcSatVb: null, usdBrl: null }
+  );
+  assert.deepEqual(
+    normalizeNetworkStatus({ halfHourFee: null }, { USDBRL: { bid: null } }),
     { btcSatVb: null, usdBrl: null }
   );
 });

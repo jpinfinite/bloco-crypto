@@ -10,21 +10,28 @@ export const MARKET_COIN_IDS = [
   'cardano',
 ];
 
+function finiteNumber(value) {
+  if (typeof value !== 'number' && typeof value !== 'string') return null;
+  if (typeof value === 'string' && value.trim() === '') return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 export function normalizePrices(payload) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return null;
 
   const normalized = {};
   for (const id of MARKET_COIN_IDS) {
     const coin = payload[id];
-    if (!coin || typeof coin !== 'object') continue;
+    if (!coin || typeof coin !== 'object' || Array.isArray(coin)) continue;
 
-    const brl = Number(coin.brl);
-    const change = Number(coin.brl_24h_change);
-    if (!Number.isFinite(brl) || brl <= 0) continue;
+    const brl = finiteNumber(coin.brl);
+    const change = finiteNumber(coin.brl_24h_change);
+    if (brl === null || brl <= 0) continue;
 
     normalized[id] = {
       brl,
-      brl_24h_change: Number.isFinite(change) ? change : null,
+      brl_24h_change: change,
     };
   }
 
@@ -33,24 +40,24 @@ export function normalizePrices(payload) {
 
 export function normalizeFearAndGreed(payload) {
   const entry = payload?.data?.[0];
-  if (!entry) return null;
+  if (!entry || typeof entry !== 'object') return null;
 
-  const value = Number(entry.value);
+  const value = finiteNumber(entry.value);
   const label = typeof entry.value_classification === 'string'
     ? entry.value_classification.trim()
     : '';
 
-  if (!Number.isInteger(value) || value < 0 || value > 100 || !label) return null;
+  if (value === null || !Number.isInteger(value) || value < 0 || value > 100 || !label) return null;
   return { value, label };
 }
 
 export function normalizeNetworkStatus(feesPayload, usdPayload) {
-  const fee = Number(feesPayload?.halfHourFee);
-  const usd = Number(usdPayload?.USDBRL?.bid);
+  const fee = finiteNumber(feesPayload?.halfHourFee);
+  const usd = finiteNumber(usdPayload?.USDBRL?.bid);
 
   return {
-    btcSatVb: Number.isFinite(fee) && fee >= 0 ? fee : null,
-    usdBrl: Number.isFinite(usd) && usd > 0 ? usd.toFixed(2) : null,
+    btcSatVb: fee !== null && fee >= 0 ? fee : null,
+    usdBrl: usd !== null && usd > 0 ? usd.toFixed(2) : null,
   };
 }
 
