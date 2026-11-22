@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const termos = [
+  {
+    termo: 'AMM (Automated Market Maker)',
+    categoria: 'DeFi',
+    def: 'Algoritmo autônomo que precifica ativos em corretoras descentralizadas por meio de pools de liquidez e fórmulas matemáticas como x · y = k.',
+  },
+  {
+    termo: 'Gas Fee (Taxa de Rede)',
+    categoria: 'Infraestrutura',
+    def: 'Custo computacional pago em moeda nativa (ex: ETH, SOL) aos validadores da rede para incluir e executar uma transação ou contrato no bloco.',
+  },
+  {
+    termo: 'Seed Phrase (Frase Semente / Backup)',
+    categoria: 'Segurança',
+    def: 'Sequência mnemônica de 12 ou 24 palavras (padrão BIP-39) da qual derivam todas as chaves privadas de uma carteira. Sua posse confere controle total dos fundos.',
+  },
+  {
+    termo: 'PSAV (Prestadora de Serviços de Ativos Virtuais)',
+    categoria: 'Regulação',
+    def: 'Enquadramento legal brasileiro (Lei 14.478/2022) para corretoras e intermediários cripto autorizados e supervisionados pelo Banco Central.',
+  },
+  {
+    termo: 'TVL (Total Value Locked)',
+    categoria: 'DeFi',
+    def: 'Métrica que quantifica o montante total de capital em ativos cripto depositado e travado nos contratos inteligentes de um protocolo ou rede.',
+  },
+  {
+    termo: 'Segregação Patrimonial',
+    categoria: 'Regulação',
+    def: 'Separação jurídica e contábil estrita entre os ativos sob custódia dos clientes e os recursos próprios da instituição intermediadora.',
+  },
+  {
+    termo: 'Impermanent Loss (Perda Impermanente)',
+    categoria: 'DeFi',
+    def: 'Divergência de valor que ocorre quando a cotação de ativos depositados em um pool varia em relação ao momento do aporte se comparado a manter em carteira.',
+  },
+  {
+    termo: 'Optimistic Rollup',
+    categoria: 'Infraestrutura',
+    def: 'Solução de escalabilidade Layer 2 que assume transações válidas por padrão e utiliza uma janela de contestação de 7 dias com provas de fraude.',
+  },
+  {
+    termo: 'Proto-Danksharding (EIP-4844)',
+    categoria: 'Infraestrutura',
+    def: 'Atualização da rede Ethereum que introduziu blobs de dados efêmeros, barateando significativamente o custo de liquidação das Layer 2s.',
+  },
+  {
+    termo: 'Cold Wallet (Carteira Fria)',
+    categoria: 'Segurança',
+    def: 'Dispositivo físico isolado da internet (hardware wallet ou paper wallet) dedicado a armazenar chaves privadas sem exposição a malwares.',
+  },
+  {
+    termo: 'Slippage (Derrapagem de Preço)',
+    categoria: 'DeFi',
+    def: 'Diferença percentual esperada entre o preço cotado de uma ordem e o preço final em que ela é executada on-chain devido à profundidade de liquidez.',
+  },
+  {
+    termo: 'IN 1888 (Instrução Normativa RFB)',
+    categoria: 'Regulação',
+    def: 'Regulamentação da Receita Federal do Brasil que institui a obrigatoriedade de prestação de informações relativas a operações realizadas com criptoativos.',
+  },
+];
+---
+
+<BaseLayout
+  title="Glossário Técnico"
+  description="Dicionário de infraestrutura, criptografia, regulação e mecânica financeira de redes descentralizadas com busca instantânea."
+>
+  <div class="max-w-4xl mx-auto space-y-8">
+    <div>
+      <span class="text-xs font-mono uppercase text-brand-cobalt dark:text-brand-cyan font-semibold">Terminologia On-Chain</span>
+      <h1 class="font-display font-bold text-3xl sm:text-4xl mt-1 mb-2">Glossário Técnico</h1>
+      <p class="text-sm text-slate-600 dark:text-slate-400">
+        Definições diretas e rigorosas sobre protocolos, padrões ERC, criptografia e normas regulatórias.
+      </p>
+    </div>
+
+    <!-- Campo de Busca Instantânea -->
+    <div class="relative">
+      <input
+        id="glossary-search"
+        type="text"
+        placeholder="Buscar termo técnico, sigla ou conceito (ex: Gas, PSAV, AMM, Seed)..."
+        class="w-full px-4 py-3 pl-11 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm font-sans focus:outline-none focus:ring-2 focus:ring-brand-cobalt dark:focus:ring-brand-cyan transition shadow-sm"
+      />
+      <svg
+        class="w-5 h-5 absolute left-3.5 top-3.5 text-slate-400 pointer-events-none"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <span id="term-count" class="absolute right-3.5 top-3.5 text-xs font-mono text-slate-400">
+        {termos.length} termos
+      </span>
+    </div>
+
+    <!-- Lista de Termos -->
+    <div id="terms-list" class="grid grid-cols-1 gap-4">
+      {termos.map((t) => (
+        <div
+          data-termo={t.termo.toLowerCase()}
+          data-categoria={t.categoria.toLowerCase()}
+          data-def={t.def.toLowerCase()}
+          class="term-card p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">{t.termo}</h2>
+            <span class="px-2.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[11px] font-mono text-slate-600 dark:text-slate-300 font-medium">
+              {t.categoria}
+            </span>
+          </div>
+          <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            {t.def}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <!-- Mensagem de Sem Resultados -->
+    <div id="no-terms" class="hidden p-8 text-center text-sm font-mono text-slate-500 border border-dashed border-slate-300 dark:border-slate-800 rounded-xl">
+      Nenhum termo técnico encontrado para esta busca.
+    </div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('glossary-search') as HTMLInputElement | null;
+    const cards = document.querySelectorAll<HTMLElement>('.term-card');
+    const noTerms = document.getElementById('no-terms');
+    const countBadge = document.getElementById('term-count');
+
+    searchInput?.addEventListener('input', (e) => {
+      const q = (e.target as HTMLInputElement).value.trim().toLowerCase();
+      let matchCount = 0;
+
+      cards.forEach((card) => {
+        const termo = card.getAttribute('data-termo') || '';
+        const categoria = card.getAttribute('data-categoria') || '';
+        const def = card.getAttribute('data-def') || '';
+
+        if (!q || termo.includes(q) || categoria.includes(q) || def.includes(q)) {
+          card.style.display = 'block';
+          matchCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (countBadge) {
+        countBadge.textContent = `${matchCount} termo${matchCount === 1 ? '' : 's'}`;
+      }
+
+      if (noTerms) {
+        noTerms.style.display = matchCount === 0 ? 'block' : 'none';
+      }
+    });
+  </script>
+</BaseLayout>

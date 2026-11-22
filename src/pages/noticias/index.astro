@@ -5,6 +5,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 const posts = (await getCollection('noticias')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+
+const categorias = ['TODAS', 'REGULAÇÃO', 'SEGURANÇA', 'INFRAESTRUTURA', 'MERCADO'];
 ---
 
 <BaseLayout
@@ -20,9 +22,30 @@ const posts = (await getCollection('noticias')).sort(
       </p>
     </div>
 
-    <div class="space-y-4">
+    <!-- Filtros de Categoria -->
+    <div class="flex flex-wrap gap-2 pt-2 border-b border-slate-200 dark:border-slate-800 pb-4">
+      {categorias.map((cat, idx) => (
+        <button
+          type="button"
+          data-filter={cat}
+          class={`filter-btn px-3 py-1.5 rounded-lg text-xs font-mono transition ${
+            idx === 0
+              ? 'bg-brand-cobalt text-white dark:bg-brand-cyan dark:text-slate-950 font-bold active'
+              : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-brand-cobalt dark:hover:border-brand-cyan'
+          }`}
+        >
+          {cat}
+        </button>
+      ))}
+    </div>
+
+    <!-- Lista de Artigos -->
+    <div id="posts-container" class="space-y-4">
       {posts.map((post) => (
-        <article class="p-6 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-cobalt/50 dark:hover:border-brand-cyan/50 transition">
+        <article
+          data-category={post.data.category}
+          class="post-card p-6 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-cobalt/50 dark:hover:border-brand-cyan/50 transition"
+        >
           <div class="flex items-center gap-3 text-xs font-mono mb-2">
             <span class="px-2 py-0.5 rounded bg-brand-cobalt/10 text-brand-cobalt dark:bg-brand-cyan/10 dark:text-brand-cyan font-medium">
               {post.data.category}
@@ -44,5 +67,44 @@ const posts = (await getCollection('noticias')).sort(
         </article>
       ))}
     </div>
+
+    <div id="no-results" class="hidden p-8 text-center text-sm font-mono text-slate-500 border border-dashed border-slate-300 dark:border-slate-800 rounded-xl">
+      Nenhum boletim encontrado para esta categoria.
+    </div>
   </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.filter-btn');
+    const posts = document.querySelectorAll('.post-card');
+    const noResults = document.getElementById('no-results');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+
+        buttons.forEach((b) => {
+          b.classList.remove('bg-brand-cobalt', 'text-white', 'dark:bg-brand-cyan', 'dark:text-slate-950', 'font-bold', 'active');
+          b.classList.add('bg-white', 'dark:bg-slate-900', 'border', 'border-slate-200', 'dark:border-slate-800', 'text-slate-600', 'dark:text-slate-400');
+        });
+
+        btn.classList.add('bg-brand-cobalt', 'text-white', 'dark:bg-brand-cyan', 'dark:text-slate-950', 'font-bold', 'active');
+        btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400');
+
+        let visibleCount = 0;
+        posts.forEach((p) => {
+          const category = p.getAttribute('data-category');
+          if (filter === 'TODAS' || category === filter) {
+            (p as HTMLElement).style.display = 'block';
+            visibleCount++;
+          } else {
+            (p as HTMLElement).style.display = 'none';
+          }
+        });
+
+        if (noResults) {
+          noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+      });
+    });
+  </script>
 </BaseLayout>
