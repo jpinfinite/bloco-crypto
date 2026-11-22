@@ -33,7 +33,7 @@ Revogar uma permissão não desfaz transações anteriores, não recupera tokens
 
 O Permit2 possui módulos próprios para transferências por assinatura e permissões com prazo e limite. Além de revisar a aprovação ERC-20 concedida ao contrato Permit2, o usuário deve compreender as permissões internas que concedeu a cada spender.
 
-Para entender a diferença entre esses mecanismos, leia também nosso guia sobre [phishing e assinaturas Permit2](./phishing-permit2-evm).
+Para entender a diferença entre esses mecanismos, leia também nosso guia sobre [phishing e assinaturas Permit2](/noticias/phishing-permit2-evm).
 
 ## Fontes
 
