@@ -10,6 +10,8 @@ const noticiasCollection = defineCollection({
     category: z.enum(['REGULAÇÃO', 'SEGURANÇA', 'INFRAESTRUTURA', 'MERCADO']),
     readingTime: z.string(),
     featured: z.boolean().default(false),
+    author: z.string().trim().min(1).optional(),
+    sources: z.array(z.object({ label: z.string().trim().min(1), url: z.string().url() })).default([]),
   }),
 });
 
@@ -25,7 +27,4 @@ const educacaoCollection = defineCollection({
   }),
 });
 
-export const collections = {
-  noticias: noticiasCollection,
-  educacao: educacaoCollection,
-};
+export const collections = { noticias: noticiasCollection, educacao: educacaoCollection };
