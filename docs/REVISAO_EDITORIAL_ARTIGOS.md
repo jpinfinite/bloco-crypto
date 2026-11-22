@@ -58,14 +58,31 @@ Aprimorar precisão factual, clareza, utilidade para o leitor, transparência da
 - BIS: [Project Agorá](https://www.bis.org/media-releases/20260527-project-agora-shows-how-tokenisation-can-improve-wholesale-cross-border-payments-work-will).
 - Segurança: [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/), [Ronin — documento do DOJ](https://www.justice.gov/usao-sdny/file/1311391/dl?inline=), [Wormhole — análise CertiK](https://www.certik.com/blog/wormhole-bridge-exploit-incident-analysis).
 
+## Validação técnica executada
+
+A branch foi clonada em uma pasta isolada, sem alterar a pasta original do projeto:
+
+`D:\\Bloco-cripto\\bloco-crypto-editorial-check`
+
+- Commit validado: `0ced0e7d3f796b78b91ce06868be4a435cab3694`.
+- `npm ci`: concluído.
+- `npm test`: **6 testes aprovados, 0 falhas**.
+- `npm run build`: **concluído com 29 páginas estáticas**.
+- Rotas internas dos artigos principais: verificadas e geradas.
+- Link interno entre os dois guias Permit2: verificado no HTML gerado.
+- 11 URLs externas de fontes primárias testadas: 10 responderam HTTP 200; a página da Receita Federal retornou HTTP 403 ao teste automatizado HEAD, embora tenha sido localizada e consultada pelo mecanismo de pesquisa. Isso parece ser restrição automatizada do portal, não evidência de URL inexistente.
+
+### Aviso de dependências
+
+A instalação reportou **2 vulnerabilidades moderadas** associadas a dependências do projeto, incluindo `postcss-selector-parser`. O comando `npm audit --omit=dev` também as reportou. Não foi aplicado `npm audit fix --force`, pois a sugestão do npm envolve alteração potencialmente incompatível de dependências e está fora do escopo editorial.
+
 ## Pendências antes de integrar
 
-- Executar build Astro e testes automatizados na branch.
-- Verificar todos os links externos e internos após a geração das rotas.
-- Revisar visualmente páginas renderizadas e confirmar que tabelas, fórmulas e links aparecem corretamente.
+- Revisão visual humana das páginas renderizadas, especialmente fórmula matemática e tabela comparativa.
 - Considerar uma etapa de produto para adicionar `dateModified`, autoria editorial confirmada e política de correções; o schema atual da coleção não possui esses campos.
 - Submeter conteúdo tributário e jurídico a revisão profissional antes de tratá-lo como orientação especializada.
+- Tratar as duas vulnerabilidades moderadas de dependências em uma tarefa técnica separada.
 
 ## Estado
 
-**Revisão textual dos 20 arquivos concluída nesta branch.** A validação técnica de build, testes, links e renderização permanece pendente. Nenhuma alteração foi integrada à `main` ou publicada em produção.
+**Revisão textual dos 20 arquivos concluída e validação automatizada aprovada nesta branch.** Nenhuma alteração foi integrada à `main` ou publicada em produção.
