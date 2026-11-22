@@ -1,81 +1,72 @@
 ---
-// Ticker horizontal com cotações em tempo real e variações 24h
 const tickers = [
-  { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', price: 'R$ 548.210', change: '+2.84%', up: true },
-  { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', price: 'R$ 18.940', change: '+1.42%', up: true },
-  { id: 'solana', symbol: 'SOL', name: 'Solana', price: 'R$ 1.180', change: '+5.61%', up: true },
-  { id: 'binancecoin', symbol: 'BNB', name: 'BNB', price: 'R$ 3.820', change: '-0.38%', up: false },
-  { id: 'ripple', symbol: 'XRP', name: 'XRP', price: 'R$ 8,42', change: '+8.15%', up: true },
-  { id: 'dogecoin', symbol: 'DOGE', name: 'Dogecoin', price: 'R$ 1,24', change: '-1.12%', up: false },
-  { id: 'tether', symbol: 'USDT', name: 'Tether USD', price: 'R$ 5,82', change: '+0.05%', up: true },
+  { id: 'bitcoin', symbol: 'BTC' },
+  { id: 'ethereum', symbol: 'ETH' },
+  { id: 'solana', symbol: 'SOL' },
+  { id: 'binancecoin', symbol: 'BNB' },
+  { id: 'ripple', symbol: 'XRP' },
+  { id: 'dogecoin', symbol: 'DOGE' },
+  { id: 'tether', symbol: 'USDT' },
 ];
 ---
 
 <div class="border-b border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/70 overflow-x-auto no-scrollbar py-2 px-4 text-xs font-mono">
   <div class="max-w-7xl mx-auto flex items-center gap-6 min-w-max">
     <div class="flex items-center gap-2 pr-4 border-r border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 font-bold tracking-wider uppercase">
-      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-      MERCADO AO VIVO
+      <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+      COTAÇÕES
     </div>
-
     {tickers.map((t) => (
       <div data-ticker-id={t.id} class="flex items-center gap-2">
         <span class="font-bold text-slate-800 dark:text-slate-200">{t.symbol}</span>
-        <span class="coin-price text-slate-600 dark:text-slate-400">{t.price}</span>
-        <span class={`coin-change font-semibold text-[11px] ${t.up ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
-          {t.change}
-        </span>
+        <span class="coin-price text-slate-500 dark:text-slate-400">—</span>
+        <span class="coin-change font-semibold text-[11px] text-slate-400">—</span>
       </div>
     ))}
-
     <div id="live-dynamic-ticker" class="hidden sm:flex items-center gap-2 pl-4 border-l border-slate-200 dark:border-slate-800 text-[11px] text-slate-500">
-      <!-- Injetado dinamicamente via /api/network-status -->
+      <span>Indicadores de rede indisponíveis</span>
     </div>
   </div>
 </div>
 
 <script>
+  const money = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: value < 1 ? 4 : 2 });
+
   fetch('/api/market')
-    .then((r) => (r.ok ? r.json() : null))
+    .then((response) => response.ok ? response.json() : null)
     .then((data) => {
-      if (!data || !data.prices) return;
-      const prices = data.prices;
+      if (!data?.prices) return;
+      document.querySelectorAll('[data-ticker-id]').forEach((element) => {
+        const id = element.getAttribute('data-ticker-id');
+        const coin = id ? data.prices[id] : null;
+        if (!coin) return;
 
-      document.querySelectorAll('[data-ticker-id]').forEach((el) => {
-        const id = el.getAttribute('data-ticker-id');
-        if (id && prices[id]) {
-          const brl = prices[id].brl;
-          const change = prices[id].brl_24h_change;
-
-          if (brl !== undefined) {
-            const priceEl = el.querySelector('.coin-price');
-            if (priceEl) {
-              priceEl.textContent = brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            }
-          }
-
-          if (change !== undefined) {
-            const changeEl = el.querySelector('.coin-change');
-            if (changeEl) {
-              const isUp = change >= 0;
-              changeEl.textContent = `${isUp ? '+' : ''}${change.toFixed(2)}%`;
-              changeEl.className = `coin-change font-semibold text-[11px] ${
-                isUp ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
-              }`;
-            }
-          }
+        const price = element.querySelector('.coin-price');
+        const change = element.querySelector('.coin-change');
+        if (price && Number.isFinite(coin.brl)) price.textContent = money(coin.brl);
+        if (change && Number.isFinite(coin.brl_24h_change)) {
+          const up = coin.brl_24h_change >= 0;
+          change.textContent = `${up ? '+' : ''}${coin.brl_24h_change.toFixed(2)}%`;
+          change.className = `coin-change font-semibold text-[11px] ${up ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`;
         }
       });
+    })
+    .catch(() => {});
+
+  fetch('/api/network-status')
+    .then((response) => response.ok ? response.json() : null)
+    .then((data) => {
+      const container = document.getElementById('live-dynamic-ticker');
+      if (!container || !data) return;
+      const parts: string[] = [];
+      if (Number.isFinite(data.btcSatVb)) parts.push(`FEE: ${data.btcSatVb} sat/vB`);
+      if (typeof data.usdBrl === 'string') parts.push(`USD: R$ ${data.usdBrl}`);
+      container.textContent = parts.length ? parts.join(' • ') : 'Indicadores de rede indisponíveis';
     })
     .catch(() => {});
 </script>
 
 <style>
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
