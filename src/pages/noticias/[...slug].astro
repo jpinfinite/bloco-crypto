@@ -12,35 +12,36 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const articleUrl = new URL(`/noticias/${post.id}`, Astro.site ?? 'https://bloco-crypto.pages.dev').href;
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: articleUrl,
+  publisher: {
+    '@type': 'Organization',
+    name: 'BLOCO\\CRYPTO',
+    url: 'https://bloco-crypto.pages.dev',
+  },
+};
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout title={post.data.title} description={post.data.description} ogType="article" structuredData={articleSchema}>
   <article class="max-w-3xl mx-auto">
     <div class="mb-6 pb-6 border-b border-slate-200 dark:border-slate-800">
       <div class="flex items-center gap-3 text-xs font-mono mb-3">
-        <span class="px-2.5 py-1 rounded bg-brand-cobalt/10 text-brand-cobalt dark:bg-brand-cyan/10 dark:text-brand-cyan font-semibold">
-          {post.data.category}
-        </span>
-        <span class="text-slate-500">
-          {post.data.pubDate.toLocaleDateString('pt-BR')} • Leitura: {post.data.readingTime}
-        </span>
+        <span class="px-2.5 py-1 rounded bg-brand-cobalt/10 text-brand-cobalt dark:bg-brand-cyan/10 dark:text-brand-cyan font-semibold">{post.data.category}</span>
+        <time datetime={post.data.pubDate.toISOString()} class="text-slate-500">{post.data.pubDate.toLocaleDateString('pt-BR')} • Leitura: {post.data.readingTime}</time>
       </div>
-      <h1 class="font-display font-bold text-3xl sm:text-4xl leading-tight mb-3">
-        {post.data.title}
-      </h1>
-      <p class="text-base text-slate-600 dark:text-slate-400">
-        {post.data.description}
-      </p>
+      <h1 class="font-display font-bold text-3xl sm:text-4xl leading-tight mb-3">{post.data.title}</h1>
+      <p class="text-base text-slate-600 dark:text-slate-400">{post.data.description}</p>
     </div>
-
-    <div class="prose prose-slate dark:prose-invert max-w-none leading-relaxed space-y-4">
-      <Content />
-    </div>
-
+    <div class="prose prose-slate dark:prose-invert max-w-none leading-relaxed space-y-4"><Content /></div>
     <div class="mt-12 pt-6 border-t border-slate-200 dark:border-slate-800">
-      <a href="/noticias" class="text-sm font-mono text-brand-cobalt dark:text-brand-cyan hover:underline">
-        ← Voltar para todas as notícias
-      </a>
+      <a href="/noticias" class="text-sm font-mono text-brand-cobalt dark:text-brand-cyan hover:underline">← Voltar para todas as notícias</a>
     </div>
   </article>
 </BaseLayout>
