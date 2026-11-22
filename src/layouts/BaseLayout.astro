@@ -7,6 +7,7 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  ogType?: 'website' | 'article';
   noIndex?: boolean;
   structuredData?: Record<string, unknown>;
 }
@@ -15,6 +16,7 @@ const {
   title,
   description = 'Finanças, Educação & Infraestrutura Cripto sem ruído e sem conselho de investimento.',
   ogImage = '/images/logo-alpha.png',
+  ogType = 'website',
   noIndex = false,
   structuredData,
 } = Astro.props;
@@ -41,7 +43,7 @@ const pageSchema = structuredData ?? {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
     {noIndex && <meta name="robots" content="noindex, nofollow" />}
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="BLOCO\\CRYPTO" />
     <meta property="og:title" content={pageTitle} />
@@ -114,7 +116,7 @@ const pageSchema = structuredData ?? {
         <div class="flex items-center gap-3">
           <a
             href="/glossario"
-            aria-label="Explorar notícias" title="Explorar notícias"
+            aria-label="Explorar glossário" title="Explorar glossário"
             class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
