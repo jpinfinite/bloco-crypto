@@ -2,138 +2,124 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout
-  title="Calculadora de Preço Médio (DCA)"
-  description="Calcule seu preço médio ponderado de aquisição em criptoativos com múltiplas ordens de compra de forma privada e local."
->
+<BaseLayout title="Calculadora de Preço Médio (DCA)" description="Calcule seu preço médio ponderado de aquisição em criptoativos com múltiplas ordens de compra de forma privada e local.">
   <div class="max-w-3xl mx-auto space-y-8">
     <div>
       <span class="text-xs font-mono uppercase text-brand-orange font-semibold">Ferramenta Fiscal & Controle</span>
       <h1 class="font-display font-bold text-3xl mt-1 mb-2">Calculadora de Preço Médio (DCA)</h1>
-      <p class="text-sm text-slate-600 dark:text-slate-400">
-        Adicione suas ordens de compra para calcular o custo médio ponderado de aquisição. Todos os cálculos ocorrem localmente no seu navegador.
-      </p>
+      <p class="text-sm text-slate-600 dark:text-slate-400">Adicione suas ordens de compra para calcular o custo médio ponderado de aquisição. Todos os cálculos ocorrem localmente no seu navegador.</p>
     </div>
 
     <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-6">
       <div id="orders-container" class="space-y-3">
-        <!-- Linha 1 -->
         <div class="order-row grid grid-cols-12 gap-3 items-end">
           <div class="col-span-5">
-            <label class="block font-mono text-xs text-slate-500 mb-1">Quantidade Comprada</label>
-            <input type="number" step="any" placeholder="0.25" class="qty-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm" />
+            <label class="block font-mono text-xs text-slate-500 mb-1" for="qty-1">Quantidade Comprada</label>
+            <input id="qty-1" type="number" min="0" step="any" inputmode="decimal" placeholder="0.25" class="qty-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm aria-[invalid=true]:border-rose-500" />
           </div>
           <div class="col-span-6">
-            <label class="block font-mono text-xs text-slate-500 mb-1">Preço Pago por Unidade (R$)</label>
-            <input type="number" step="any" placeholder="510000" class="price-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm" />
+            <label class="block font-mono text-xs text-slate-500 mb-1" for="price-1">Preço Pago por Unidade (R$)</label>
+            <input id="price-1" type="number" min="0" step="any" inputmode="decimal" placeholder="510000" class="price-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm aria-[invalid=true]:border-rose-500" />
           </div>
           <div class="col-span-1">
-            <button type="button" class="remove-row w-full py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500 font-mono text-xs" title="Remover">×</button>
+            <button type="button" class="remove-row w-full py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500 font-mono text-xs" title="Remover ordem" aria-label="Remover ordem 1">×</button>
           </div>
         </div>
-
-        <!-- Linha 2 -->
         <div class="order-row grid grid-cols-12 gap-3 items-end">
           <div class="col-span-5">
-            <input type="number" step="any" placeholder="0.15" class="qty-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm" />
+            <label class="sr-only" for="qty-2">Quantidade comprada — ordem 2</label>
+            <input id="qty-2" type="number" min="0" step="any" inputmode="decimal" placeholder="0.15" aria-label="Quantidade comprada — ordem 2" class="qty-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm aria-[invalid=true]:border-rose-500" />
           </div>
           <div class="col-span-6">
-            <input type="number" step="any" placeholder="545000" class="price-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm" />
+            <label class="sr-only" for="price-2">Preço pago por unidade em reais — ordem 2</label>
+            <input id="price-2" type="number" min="0" step="any" inputmode="decimal" placeholder="545000" aria-label="Preço pago por unidade em reais — ordem 2" class="price-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm aria-[invalid=true]:border-rose-500" />
           </div>
           <div class="col-span-1">
-            <button type="button" class="remove-row w-full py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500 font-mono text-xs" title="Remover">×</button>
+            <button type="button" class="remove-row w-full py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500 font-mono text-xs" title="Remover ordem" aria-label="Remover ordem 2">×</button>
           </div>
         </div>
       </div>
+
+      <p id="orders-validation" class="text-xs text-rose-600 dark:text-rose-400" role="status" aria-live="polite" hidden></p>
 
       <div class="flex flex-wrap gap-3">
-        <button
-          id="add-order"
-          type="button"
-          class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-mono text-xs font-semibold transition"
-        >
-          + Adicionar Ordem
-        </button>
-        <button
-          id="clear-orders"
-          type="button"
-          class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-mono text-xs transition"
-        >
-          Limpar Valores
-        </button>
+        <button id="add-order" type="button" class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-mono text-xs font-semibold transition">+ Adicionar Ordem</button>
+        <button id="clear-orders" type="button" class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-mono text-xs transition">Limpar Valores</button>
       </div>
 
-      <!-- Resultados -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-5 border-t border-slate-200 dark:border-slate-800 font-mono">
-        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-          <span class="text-xs text-slate-500 block mb-1">Quantidade Total</span>
-          <span id="total-qty" class="text-lg font-bold">0</span>
-        </div>
-
-        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-          <span class="text-xs text-slate-500 block mb-1">Custo Total Aportado</span>
-          <span id="total-cost" class="text-lg font-bold">R$ 0,00</span>
-        </div>
-
-        <div class="p-4 rounded-xl bg-brand-cobalt/10 dark:bg-brand-cyan/10 border border-brand-cobalt/30 dark:border-brand-cyan/30">
-          <span class="text-xs text-brand-cobalt dark:text-brand-cyan block mb-1">Preço Médio Ponderado</span>
-          <span id="avg-price" class="text-lg font-bold text-brand-cobalt dark:text-brand-cyan">R$ 0,00</span>
-        </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-5 border-t border-slate-200 dark:border-slate-800 font-mono" aria-live="polite">
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800"><span class="text-xs text-slate-500 block mb-1">Quantidade Total</span><span id="total-qty" class="text-lg font-bold">0</span></div>
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800"><span class="text-xs text-slate-500 block mb-1">Custo Total Aportado</span><span id="total-cost" class="text-lg font-bold">R$ 0,00</span></div>
+        <div class="p-4 rounded-xl bg-brand-cobalt/10 dark:bg-brand-cyan/10 border border-brand-cobalt/30 dark:border-brand-cyan/30"><span class="text-xs text-brand-cobalt dark:text-brand-cyan block mb-1">Preço Médio Ponderado</span><span id="avg-price" class="text-lg font-bold text-brand-cobalt dark:text-brand-cyan">R$ 0,00</span></div>
       </div>
     </div>
   </div>
 
   <script>
-    const container = document.getElementById('orders-container')!;
+    import { calculateDcaOrders } from '../../lib/dca.js';
+
+    const container = document.getElementById('orders-container');
+    const validationMessage = document.getElementById('orders-validation');
+    const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
     function recalculate() {
-      let totalQty = 0;
-      let totalCost = 0;
+      if (!container) return;
+      const orderRows = Array.from(container.querySelectorAll('.order-row'));
+      const orders = orderRows.map((row) => ({
+        quantity: row.querySelector<HTMLInputElement>('.qty-input')?.value ?? '',
+        unitPrice: row.querySelector<HTMLInputElement>('.price-input')?.value ?? '',
+      }));
+      const result = calculateDcaOrders(orders);
 
-      document.querySelectorAll('.order-row').forEach((row) => {
-        const qty = parseFloat((row.querySelector('.qty-input') as HTMLInputElement).value) || 0;
-        const price = parseFloat((row.querySelector('.price-input') as HTMLInputElement).value) || 0;
-        if (qty > 0 && price > 0) {
-          totalQty += qty;
-          totalCost += qty * price;
-        }
+      orderRows.forEach((row, index) => {
+        const invalid = result.invalidOrderIndexes.includes(index);
+        const quantityInput = row.querySelector<HTMLInputElement>('.qty-input');
+        const priceInput = row.querySelector<HTMLInputElement>('.price-input');
+        quantityInput?.setAttribute('aria-invalid', String(invalid));
+        priceInput?.setAttribute('aria-invalid', String(invalid));
+        quantityInput?.setAttribute('aria-label', `Quantidade comprada — ordem ${index + 1}`);
+        priceInput?.setAttribute('aria-label', `Preço pago por unidade em reais — ordem ${index + 1}`);
+        row.querySelector<HTMLButtonElement>('.remove-row')?.setAttribute('aria-label', `Remover ordem ${index + 1}`);
       });
 
-      const avg = totalQty > 0 ? totalCost / totalQty : 0;
-      document.getElementById('total-qty')!.textContent = totalQty.toLocaleString('pt-BR', { maximumFractionDigits: 8 });
-      document.getElementById('total-cost')!.textContent = totalCost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      document.getElementById('avg-price')!.textContent = avg.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('total-qty')?.replaceChildren(document.createTextNode(result.totalQty.toLocaleString('pt-BR', { maximumFractionDigits: 8 })));
+      document.getElementById('total-cost')?.replaceChildren(document.createTextNode(formatCurrency(result.totalCost)));
+      document.getElementById('avg-price')?.replaceChildren(document.createTextNode(formatCurrency(result.averagePrice)));
+
+      if (validationMessage) {
+        validationMessage.hidden = result.invalidOrderCount === 0;
+        validationMessage.textContent = result.invalidOrderCount === 1
+          ? '1 ordem incompleta ou inválida foi excluída do cálculo. Preencha quantidade e preço com valores maiores que zero.'
+          : `${result.invalidOrderCount} ordens incompletas ou inválidas foram excluídas do cálculo. Preencha quantidade e preço com valores maiores que zero.`;
+      }
     }
 
     document.getElementById('add-order')?.addEventListener('click', () => {
+      if (!container) return;
       const row = document.createElement('div');
       row.className = 'order-row grid grid-cols-12 gap-3 items-end';
       row.innerHTML = `
-        <div class="col-span-5">
-          <input type="number" step="any" placeholder="0.10" class="qty-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm" />
-        </div>
-        <div class="col-span-6">
-          <input type="number" step="any" placeholder="530000" class="price-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm" />
-        </div>
-        <div class="col-span-1">
-          <button type="button" class="remove-row w-full py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500 font-mono text-xs" title="Remover">×</button>
-        </div>
+        <div class="col-span-5"><input type="number" min="0" step="any" inputmode="decimal" placeholder="0.10" aria-label="Quantidade comprada" class="qty-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm aria-[invalid=true]:border-rose-500" /></div>
+        <div class="col-span-6"><input type="number" min="0" step="any" inputmode="decimal" placeholder="530000" aria-label="Preço pago por unidade em reais" class="price-input w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono text-sm aria-[invalid=true]:border-rose-500" /></div>
+        <div class="col-span-1"><button type="button" class="remove-row w-full py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500 font-mono text-xs" title="Remover ordem" aria-label="Remover ordem">×</button></div>
       `;
       container.appendChild(row);
+      recalculate();
     });
 
-    container.addEventListener('input', recalculate);
-    container.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (target.classList.contains('remove-row') && document.querySelectorAll('.order-row').length > 1) {
+    container?.addEventListener('input', recalculate);
+    container?.addEventListener('click', (event) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest('.remove-row') && container.querySelectorAll('.order-row').length > 1) {
         target.closest('.order-row')?.remove();
         recalculate();
       }
     });
 
     document.getElementById('clear-orders')?.addEventListener('click', () => {
-      document.querySelectorAll('.qty-input, .price-input').forEach((inp) => {
-        (inp as HTMLInputElement).value = '';
+      container?.querySelectorAll('input').forEach((input) => {
+        input.value = '';
+        input.setAttribute('aria-invalid', 'false');
       });
       recalculate();
     });

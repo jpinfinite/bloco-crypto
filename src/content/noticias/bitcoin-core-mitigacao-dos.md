@@ -1,16 +1,30 @@
 ---
-title: "Desenvolvedores lançam atualização do Bitcoin Core para mitigar vetor de DoS"
-description: "Nova versão corrige falha na camada de comunicação P2P identificada durante auditoria de memória de nós completos."
+title: "Como acompanhar atualizações e avisos oficiais de segurança do Bitcoin Core"
+description: "Fontes primárias para verificar versões, notas de lançamento e comunicados de segurança antes de atualizar nós completos."
 pubDate: 2026-11-22
 category: "INFRAESTRUTURA"
 readingTime: "3 min"
 featured: false
+author: "Redação BLOCO\\CRYPTO"
+sources:
+  - label: "Bitcoin Core — Version History"
+    url: "https://bitcoin.org/en/version-history"
+  - label: "Bitcoin Core — Security Advisories"
+    url: "https://github.com/bitcoin/bitcoin/security/advisories"
+  - label: "Bitcoin Core — Releases"
+    url: "https://bitcoin.org/en/releases/"
 ---
 
-Os mantenedores do **Bitcoin Core** disponibilizaram uma atualização de manutenção focada no fortalecimento da camada de rede ponto a ponto (P2P) dos nós validadores.
+Operadores de nós completos precisam acompanhar as atualizações do Bitcoin Core com base em informações publicadas pelos mantenedores. Uma notícia isolada ou uma lista de versões reproduzida sem referência primária não é suficiente para determinar se uma instalação está vulnerável.
 
-## O que foi corrigido
-A atualização endereça um vetor de negação de serviço (*Denial of Service - DoS*) em que nós maliciosos poderiam enviar sequências específicas de mensagens de inventário de blocos para elevar o consumo de memória RAM do nó receptor.
+## Onde verificar
 
-* **Impacto nos fundos:** Nenhum. A vulnerabilidade afetava apenas a disponibilidade do nó na rede, sem qualquer risco às chaves privadas ou regras de consenso.
-* **Recomendação técnica:** Operadores de *full nodes* e infraestruturas de liquidação devem atualizar seus binários para a versão mais recente verificando as assinaturas PGP oficiais.
+- **Histórico de versões:** reúne as versões publicadas e permite conferir datas e notas de lançamento.
+- **Avisos de segurança:** registra os comunicados públicos de vulnerabilidade divulgados no repositório oficial.
+- **Notas de lançamento:** descrevem correções, mudanças de compatibilidade e instruções de atualização de cada versão.
+
+## Antes de atualizar
+
+Confirme o número exato da versão instalada, leia as notas da versão de destino e siga as instruções oficiais de verificação de integridade e assinatura dos artefatos. Não aplique uma recomendação de atualização baseada apenas em um resumo sem link para a fonte primária.
+
+O BLOCO\\CRYPTO recomenda que informações sobre CVEs, versões afetadas e correções sejam publicadas somente depois de conferência nos canais oficiais do projeto.
