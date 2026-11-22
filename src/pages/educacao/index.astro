@@ -1,0 +1,79 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const guides = (await getCollection('educacao')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const trilhas = [
+  { num: '01', titulo: '01. Fundamentos', desc: 'Chaves públicas, privadas, blocos, consenso e taxas de rede.' },
+  { num: '02', titulo: '02. Autocustódia', desc: 'Hot wallets, cold wallets, backup de seed phrase e proteção anti-phishing.' },
+  { num: '03', titulo: '03. DeFi', desc: 'DEXs, pools de liquidez, impermanent loss e stablecoins.' },
+  { num: '04', titulo: '04. Impostos', desc: 'IN 1888, cálculo de preço médio e organização de histórico.' },
+];
+---
+
+<BaseLayout
+  title="Trilhas de Educação Técnica"
+  description="Guias estruturados para aprender autocustódia, funcionamento de redes e finanças descentralizadas."
+>
+  <div class="max-w-4xl mx-auto space-y-10">
+    <div>
+      <span class="text-xs font-mono uppercase text-brand-purple font-semibold">Formação Técnica</span>
+      <h1 class="font-display font-bold text-3xl sm:text-4xl mt-1 mb-2">Trilhas de Educação</h1>
+      <p class="text-sm text-slate-600 dark:text-slate-400">
+        Conteúdo modular e progressivo, projetado para capacitar usuários na soberania de seus ativos e compreensão de protocolos.
+      </p>
+    </div>
+
+    <!-- Lista de Guias Disponíveis -->
+    <div class="space-y-4">
+      <h2 class="font-display font-bold text-xl border-b border-slate-200 dark:border-slate-800 pb-3">
+        Guias Publicados
+      </h2>
+      <div class="grid grid-cols-1 gap-4">
+        {guides.map((guide) => (
+          <article class="p-6 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-purple/50 transition">
+            <div class="flex items-center gap-3 text-xs font-mono mb-2">
+              <span class="px-2 py-0.5 rounded bg-brand-purple/10 text-brand-purple font-medium">
+                {guide.data.trilha}
+              </span>
+              <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                {guide.data.nivel}
+              </span>
+              <span class="text-slate-400">Leitura: {guide.data.readingTime}</span>
+            </div>
+            <h3 class="font-display font-bold text-xl mb-2">
+              <a href={`/educacao/${guide.id}`} class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">
+                {guide.data.title}
+              </a>
+            </h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+              {guide.data.description}
+            </p>
+            <a href={`/educacao/${guide.id}`} class="text-xs font-mono font-medium text-brand-cobalt dark:text-brand-cyan hover:underline">
+              ACESSAR GUIA COMPLETO →
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- Visão Geral das Trilhas -->
+    <div class="space-y-4">
+      <h2 class="font-display font-bold text-xl border-b border-slate-200 dark:border-slate-800 pb-3">
+        Estrutura Curricular
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {trilhas.map((t) => (
+          <div class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <span class="font-mono text-xs font-bold text-brand-purple">{t.num}</span>
+            <h3 class="font-display font-bold text-base mt-1 mb-1">{t.titulo}</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400">{t.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

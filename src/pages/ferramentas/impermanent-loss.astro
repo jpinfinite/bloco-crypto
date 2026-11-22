@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Simulador de Impermanent Loss"
+  description="Calcule a perda impermanente em pools de liquidez DeFi 50/50 de forma rápida e local."
+>
+  <div class="max-w-3xl mx-auto space-y-8">
+    <div>
+      <span class="text-xs font-mono uppercase text-brand-orange font-semibold">Ferramenta DeFi • Pool 50/50</span>
+      <h1 class="font-display font-bold text-3xl mt-1 mb-2">Simulador de Impermanent Loss</h1>
+      <p class="text-sm text-slate-600 dark:text-slate-400">
+        Compare o valor da sua posição em um formador de mercado automatizado (AMM) versus apenas manter os tokens na carteira (HODL).
+      </p>
+    </div>
+
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+        <div>
+          <label class="block font-mono text-xs text-slate-500 mb-1.5">Depósito Inicial Total (USD)</label>
+          <input id="il-deposit" type="number" value="1000" min="1" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono" />
+        </div>
+        <div>
+          <label class="block font-mono text-xs text-slate-500 mb-1.5">Variação Token A (%)</label>
+          <input id="il-token-a" type="number" value="50" step="any" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono" />
+        </div>
+        <div>
+          <label class="block font-mono text-xs text-slate-500 mb-1.5">Variação Token B (%)</label>
+          <input id="il-token-b" type="number" value="0" step="any" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono" />
+        </div>
+      </div>
+
+      <!-- Painel de Resultados -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-200 dark:border-slate-800 font-mono">
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+          <span class="text-xs text-slate-500 block mb-1">Valor se ficasse em HODL</span>
+          <span id="out-hodl" class="text-lg font-bold">$1,250.00</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+          <span class="text-xs text-slate-500 block mb-1">Valor na Pool (sem taxas)</span>
+          <span id="out-pool" class="text-lg font-bold text-brand-cobalt dark:text-brand-cyan">$1,224.74</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+          <span class="text-xs text-amber-600 dark:text-amber-400 block mb-1">Impermanent Loss</span>
+          <span id="out-il" class="text-lg font-bold text-amber-600 dark:text-amber-400">-2.02% (-$25.26)</span>
+        </div>
+      </div>
+
+      <p class="text-xs text-slate-500 leading-relaxed">
+        <strong>Nota técnica:</strong> Este cálculo isola apenas a divergência de preço da fórmula <code>x · y = k</code>. Na prática, as taxas de negociação (<em>swap fees</em>) arrecadadas pela pool podem compensar total ou parcialmente essa diferença.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function calculateIL() {
+      const deposit = parseFloat((document.getElementById('il-deposit') as HTMLInputElement).value) || 0;
+      const changeA = parseFloat((document.getElementById('il-token-a') as HTMLInputElement).value) || 0;
+      const changeB = parseFloat((document.getElementById('il-token-b') as HTMLInputElement).value) || 0;
+
+      const multA = 1 + changeA / 100;
+      const multB = 1 + changeB / 100;
+
+      if (multA <= 0 || multB <= 0 || deposit <= 0) return;
+
+      const ratio = multA / multB;
+      const ilPercent = (2 * Math.sqrt(ratio)) / (1 + ratio) - 1;
+
+      const hodlValue = (deposit / 2) * multA + (deposit / 2) * multB;
+      const poolValue = hodlValue * (1 + ilPercent);
+      const diffUsd = poolValue - hodlValue;
+
+      const fmt = (v: number) => v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+
+      document.getElementById('out-hodl')!.textContent = fmt(hodlValue);
+      document.getElementById('out-pool')!.textContent = fmt(poolValue);
+      document.getElementById('out-il')!.textContent = `${(ilPercent * 100).toFixed(2)}% (${fmt(diffUsd)})`;
+    }
+
+    ['il-deposit', 'il-token-a', 'il-token-b'].forEach((id) => {
+      document.getElementById(id)?.addEventListener('input', calculateIL);
+    });
+
+    calculateIL();
+  </script>
+</BaseLayout>

@@ -1,0 +1,127 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Finanças, Educação & Infraestrutura Cripto sem ruído e sem conselho de investimento.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | BLOCO\CRYPTO</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+
+    <!-- Google Fonts: Chakra Petch, Space Grotesk, Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Evita flash branco ao carregar no modo escuro -->
+    <script is:inline>
+      const theme = localStorage.getItem('theme') || 'light';
+      if (theme === 'dark') document.documentElement.classList.add('dark');
+    </script>
+  </head>
+
+  <body class="bg-brand-light text-slate-900 dark:bg-brand-dark dark:text-slate-100 font-sans antialiased transition-colors duration-200 min-h-screen flex flex-col">
+    <!-- Barra Técnica Superior -->
+    <div class="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-xs font-mono py-1.5 px-4">
+      <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2 text-slate-600 dark:text-slate-400">
+        <div class="flex items-center gap-4">
+          <span>INFRAESTRUTURA & EDUCAÇÃO</span>
+          <span class="hidden sm:inline text-slate-300 dark:text-slate-700">|</span>
+          <span class="hidden sm:inline">CONTEÚDO ESTRITAMENTE INFORMATIVO</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            SISTEMA OPERACIONAL
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header Principal -->
+    <header class="sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-brand-dark/90 backdrop-blur">
+      <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <!-- Logo Principal com Fundo Preto Fixo -->
+        <a href="/" class="flex items-center group">
+          <div class="bg-brand-dark px-3 py-1.5 rounded-lg border border-slate-800 shadow-sm transition-opacity group-hover:opacity-95 flex items-center">
+            <img
+              src="/images/logo-alpha.png"
+              alt="BLOCO\CRYPTO"
+              class="h-7 sm:h-8 w-auto object-contain"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+        </a>
+
+        <!-- Navegação -->
+        <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600 dark:text-slate-300">
+          <a href="/noticias" class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">Notícias</a>
+          <a href="/educacao" class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">Educação</a>
+          <a href="/ferramentas" class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">Ferramentas</a>
+          <a href="/glossario" class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">Glossário</a>
+        </nav>
+
+        <!-- Botão Tema Claro/Escuro -->
+        <button
+          id="theme-toggle"
+          type="button"
+          aria-label="Alternar tema"
+          class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-mono"
+        >
+          <span class="dark:hidden">DARK</span>
+          <span class="hidden dark:inline">LIGHT</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
+      <slot />
+    </main>
+
+    <!-- Footer com Disclaimer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 mt-16 bg-white dark:bg-slate-950">
+      <div class="max-w-6xl mx-auto px-4 py-10 space-y-6">
+        <div class="p-4 rounded-lg border border-amber-500/30 bg-amber-500/5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          <strong class="text-amber-600 dark:text-amber-400 font-mono uppercase">Aviso de Isenção de Responsabilidade:</strong>
+          O <strong>BLOCO\CRYPTO</strong> é um portal independente dedicado exclusivamente à educação técnica, infraestrutura blockchain e notícias factuais. Nenhum artigo, dado ou calculadora publicada neste site constitui recomendação de investimento, análise de valores mobiliários ou consultoria financeira.
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+          <p>© {new Date().getFullYear()} BLOCO\CRYPTO — Finanças, Educação & Infraestrutura.</p>
+          <div class="flex gap-4">
+            <a href="/noticias" class="hover:underline">Notícias</a>
+            <a href="/educacao" class="hover:underline">Educação</a>
+            <a href="/ferramentas" class="hover:underline">Ferramentas</a>
+            <a href="/glossario" class="hover:underline">Glossário</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const btn = document.getElementById('theme-toggle');
+      btn?.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      });
+    </script>
+  </body>
+</html>

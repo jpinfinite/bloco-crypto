@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('noticias')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout
+  title="Boletim Técnico & Notícias"
+  description="Acompanhe novidades sobre regulação, segurança, infraestrutura e mercado cripto com rigor factual."
+>
+  <div class="max-w-4xl mx-auto space-y-8">
+    <div>
+      <span class="text-xs font-mono uppercase text-brand-cobalt dark:text-brand-cyan font-semibold">Atualizações Factuais</span>
+      <h1 class="font-display font-bold text-3xl sm:text-4xl mt-1 mb-2">Boletim Técnico & Notícias</h1>
+      <p class="text-sm text-slate-600 dark:text-slate-400">
+        Informações selecionadas sobre governança de protocolos, decisões regulatórias e vetores de segurança.
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      {posts.map((post) => (
+        <article class="p-6 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-cobalt/50 dark:hover:border-brand-cyan/50 transition">
+          <div class="flex items-center gap-3 text-xs font-mono mb-2">
+            <span class="px-2 py-0.5 rounded bg-brand-cobalt/10 text-brand-cobalt dark:bg-brand-cyan/10 dark:text-brand-cyan font-medium">
+              {post.data.category}
+            </span>
+            <span class="text-slate-400">Leitura: {post.data.readingTime}</span>
+            <span class="text-slate-400">• {post.data.pubDate.toLocaleDateString('pt-BR')}</span>
+          </div>
+          <h2 class="font-display font-bold text-xl mb-2">
+            <a href={`/noticias/${post.id}`} class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">
+              {post.data.title}
+            </a>
+          </h2>
+          <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+            {post.data.description}
+          </p>
+          <a href={`/noticias/${post.id}`} class="text-xs font-mono font-medium text-brand-cobalt dark:text-brand-cyan hover:underline">
+            LER ARTIGO COMPLETO →
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

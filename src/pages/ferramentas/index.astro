@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const ferramentas = [
+  {
+    titulo: 'Calculadora de Preço Médio (DCA)',
+    desc: 'Simule ordens múltiplas de compra e descubra seu ponto médio ponderado de equilíbrio.',
+    badge: 'GESTÃO',
+    slug: '/ferramentas/preco-medio',
+  },
+  {
+    titulo: 'Simulador de Impermanent Loss',
+    desc: 'Calcule a divergência percentual e monetária entre fornecer liquidez em pools 50/50 e manter em HODL.',
+    badge: 'DEFI',
+    slug: '/ferramentas/impermanent-loss',
+  },
+];
+---
+
+<BaseLayout
+  title="Ferramentas Interativas"
+  description="Calculadoras e simuladores de execução local sem coleta de dados ou rastreamento financeiro."
+>
+  <div class="max-w-4xl mx-auto space-y-8">
+    <div>
+      <span class="text-xs font-mono uppercase text-brand-orange font-semibold">Utilitários On-Chain</span>
+      <h1 class="font-display font-bold text-3xl sm:text-4xl mt-1 mb-2">Ferramentas Analíticas</h1>
+      <p class="text-sm text-slate-600 dark:text-slate-400">
+        Todas as ferramentas rodam 100% no seu navegador. Nenhuma informação de saldo, preço ou quantidade é enviada para servidores externos.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {ferramentas.map((f) => (
+        <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:border-brand-cobalt/50 dark:hover:border-brand-cyan/50 transition">
+          <div>
+            <span class="px-2 py-0.5 rounded bg-brand-orange/10 text-brand-orange font-mono text-xs font-semibold">
+              {f.badge}
+            </span>
+            <h2 class="font-display font-bold text-xl mt-3 mb-2">{f.titulo}</h2>
+            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+              {f.desc}
+            </p>
+          </div>
+          <a
+            href={f.slug}
+            class="inline-flex items-center justify-center py-2.5 px-4 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-mono font-medium transition"
+          >
+            Abrir Ferramenta →
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

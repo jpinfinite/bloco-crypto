@@ -1,16 +1,171 @@
 ---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const todasNoticias = await getCollection('noticias');
+const noticias = todasNoticias
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 5);
+
+const trilhas = [
+  { num: '01', titulo: 'Fundamentos & Redes', desc: 'Chaves públicas, privadas, blocos, consenso e taxas de rede.' },
+  { num: '02', titulo: 'Autocustódia Segura', desc: 'Hot wallets, cold wallets, backup de seed phrase e proteção anti-phishing.' },
+  { num: '03', titulo: 'Mecânica DeFi', desc: 'DEXs, pools de liquidez, impermanent loss e stablecoins.' },
+  { num: '04', titulo: 'Regras & Impostos', desc: 'IN 1888, cálculo de preço médio e organização de histórico.' },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Início">
+  <!-- Dobra Principal: Grid 70% Editorial / 30% Ferramenta -->
+  <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Coluna Esquerda (Notícias & Análises) -->
+    <div class="lg:col-span-8 space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h1 class="font-display font-bold text-lg tracking-tight">Boletim Técnico & Notícias</h1>
+        <a href="/noticias" class="text-xs font-mono text-brand-cobalt dark:text-brand-cyan hover:underline">
+          VER TODAS →
+        </a>
+      </div>
+
+      <div class="space-y-4">
+        {noticias.map((item) => (
+          <article class="p-5 rounded-xl bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 hover:border-brand-cobalt/50 dark:hover:border-brand-cyan/50 transition">
+            <div class="flex items-center gap-3 text-xs font-mono mb-2">
+              <span class="px-2 py-0.5 rounded bg-brand-cobalt/10 text-brand-cobalt dark:bg-brand-cyan/10 dark:text-brand-cyan font-medium">
+                {item.data.category}
+              </span>
+              <span class="text-slate-400">Leitura: {item.data.readingTime}</span>
+              <span class="text-slate-400">• {item.data.pubDate.toLocaleDateString('pt-BR')}</span>
+            </div>
+            <h2 class="font-display font-bold text-xl mb-2">
+              <a href={`/noticias/${item.id}`} class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">
+                {item.data.title}
+              </a>
+            </h2>
+            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              {item.data.description}
+            </p>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- Coluna Direita (Ferramenta Interativa Estática) -->
+    <aside class="lg:col-span-4 space-y-6">
+      <div class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-mono uppercase text-brand-orange font-semibold">Ferramenta Rápida</span>
+          <span class="text-[11px] font-mono text-slate-400">100% LOCAL</span>
+        </div>
+
+        <h2 class="font-display font-bold text-lg mb-1">Calculadora de Preço Médio</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+          Calcule seu custo médio de aquisição em duas compras sem enviar dados para servidores.
+        </p>
+
+        <div class="space-y-3 text-xs">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-mono text-slate-500 mb-1">Qtd. Compra 1</label>
+              <input id="q1" type="number" step="any" placeholder="0.5" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono" />
+            </div>
+            <div>
+              <label class="block font-mono text-slate-500 mb-1">Preço Unit. 1 (R$)</label>
+              <input id="p1" type="number" step="any" placeholder="300000" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-mono text-slate-500 mb-1">Qtd. Compra 2</label>
+              <input id="q2" type="number" step="any" placeholder="0.25" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono" />
+            </div>
+            <div>
+              <label class="block font-mono text-slate-500 mb-1">Preço Unit. 2 (R$)</label>
+              <input id="p2" type="number" step="any" placeholder="360000" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono" />
+            </div>
+          </div>
+
+          <button
+            id="calc-pm"
+            type="button"
+            class="w-full py-2.5 rounded-lg bg-brand-cobalt hover:bg-blue-700 text-white font-display font-bold text-sm transition"
+          >
+            Calcular Preço Médio
+          </button>
+
+          <div id="pm-result" class="hidden p-3 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 font-mono text-xs space-y-1">
+            <div class="flex justify-between">
+              <span class="text-slate-500">Total acumulado:</span>
+              <span id="res-qtd" class="font-bold">0</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Preço Médio:</span>
+              <span id="res-pm" class="font-bold text-brand-cobalt dark:text-brand-cyan">R$ 0,00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center">
+          <a href="/ferramentas/preco-medio" class="text-xs font-mono text-brand-cobalt dark:text-brand-cyan hover:underline">
+            Abrir Calculadora Completa →
+          </a>
+        </div>
+      </div>
+
+      <!-- Atalho Simulador IL -->
+      <div class="p-5 rounded-xl bg-gradient-to-br from-brand-cobalt/5 via-brand-purple/5 to-transparent border border-brand-purple/20">
+        <span class="text-xs font-mono text-brand-purple font-semibold uppercase">DeFi Analytics</span>
+        <h3 class="font-display font-bold text-base mt-1 mb-1">Simulador de Impermanent Loss</h3>
+        <p class="text-xs text-slate-600 dark:text-slate-400 mb-3">
+          Simule o comportamento de pools 50/50 versus HODL com fórmulas de formadores de mercado.
+        </p>
+        <a href="/ferramentas/impermanent-loss" class="inline-flex items-center text-xs font-mono font-semibold text-brand-cobalt dark:text-brand-cyan hover:underline">
+          ACESSAR SIMULADOR →
+        </a>
+      </div>
+    </aside>
+  </section>
+
+  <!-- Trilhas de Educação -->
+  <section class="mt-14">
+    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3 mb-6">
+      <h2 class="font-display font-bold text-lg tracking-tight">Trilhas de Educação Técnica</h2>
+      <a href="/educacao" class="text-xs font-mono text-brand-cobalt dark:text-brand-cyan hover:underline">
+        EXPLORAR GUIAS →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {trilhas.map((t) => (
+        <a href="/educacao" class="p-5 rounded-xl bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 hover:border-brand-purple/60 transition group">
+          <span class="font-mono text-xs font-bold text-brand-purple">{t.num}.</span>
+          <h3 class="font-display font-bold text-base mt-1 mb-2 group-hover:text-brand-cobalt dark:group-hover:text-brand-cyan transition">
+            {t.titulo}
+          </h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            {t.desc}
+          </p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('calc-pm')?.addEventListener('click', () => {
+      const q1 = parseFloat((document.getElementById('q1') as HTMLInputElement).value) || 0;
+      const p1 = parseFloat((document.getElementById('p1') as HTMLInputElement).value) || 0;
+      const q2 = parseFloat((document.getElementById('q2') as HTMLInputElement).value) || 0;
+      const p2 = parseFloat((document.getElementById('p2') as HTMLInputElement).value) || 0;
+
+      const totalQtd = q1 + q2;
+      const resultBox = document.getElementById('pm-result');
+      if (totalQtd <= 0 || !resultBox) return;
+
+      const pm = (q1 * p1 + q2 * p2) / totalQtd;
+      document.getElementById('res-qtd')!.textContent = totalQtd.toLocaleString('pt-BR', { maximumFractionDigits: 8 });
+      document.getElementById('res-pm')!.textContent = pm.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      resultBox.classList.remove('hidden');
+    });
+  </script>
+</BaseLayout>
