@@ -13,6 +13,7 @@ test('layout inclui canonical, Open Graph, Twitter e JSON-LD', async () => {
 
 test('páginas de notícia geram NewsArticle com data de publicação', async () => {
   const page = await read('../src/pages/noticias/[...slug].astro');
+  const layout = await read('../src/layouts/BaseLayout.astro');
   assert.ok(page.includes("'@type': 'NewsArticle'"));
   assert.ok(page.includes('datePublished: post.data.pubDate.toISOString()'));
   assert.ok(page.includes('structuredData={articleSchema}'));
