@@ -1,29 +1,32 @@
+import {
+  apiJson,
+  fetchJson,
+  normalizeNetworkStatus,
+} from '../../src/lib/market-data.js';
+
 export const onRequestGet = async () => {
-  try {
-    const [btcFeeRes, usdBrlRes] = await Promise.all([
-      fetch('https://mempool.space/api/v1/fees/recommended'),
-      fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL'),
-    ]);
+  const requests = await Promise.allSettled([
+    fetchJson('https://mempool.space/api/v1/fees/recommended'),
+    fetchJson('https://economia.awesomeapi.com.br/json/last/USD-BRL'),
+  ]);
 
-    const btcFees = (await btcFeeRes.json()) as { halfHourFee?: number };
-    const usdData = (await usdBrlRes.json()) as { USDBRL?: { bid?: string } };
+  const fees = requests[0].status === 'fulfilled' ? requests[0].value : null;
+  const usd = requests[1].status === 'fulfilled' ? requests[1].value : null;
+  const payload = normalizeNetworkStatus(fees, usd);
 
-    const payload = {
-      btcSatVb: btcFees.halfHourFee ?? null,
-      usdBrl: usdData.USDBRL?.bid ? parseFloat(usdData.USDBRL.bid).toFixed(2) : null,
-      updatedAt: new Date().toISOString(),
-    };
-
-    return new Response(JSON.stringify(payload), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=300', // Cache na borda da Cloudflare por 5 min
-      },
-    });
-  } catch {
-    return new Response(JSON.stringify({ btcSatVb: null, usdBrl: null }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+  if (payload.btcSatVb === null && payload.usdBrl === null) {
+    return apiJson(
+      { error: 'Indicadores de rede temporariamente indisponíveis.', ...payload },
+      { status: 503, cache: false }
+    );
   }
+
+  return apiJson({
+    ...payload,
+    sources: {
+      mempool: payload.btcSatVb === null ? 'unavailable' : 'ok',
+      awesomeApi: payload.usdBrl === null ? 'unavailable' : 'ok',
+    },
+    updatedAt: new Date().toISOString(),
+  });
 };

@@ -1,37 +1,41 @@
+import {
+  apiJson,
+  fetchJson,
+  normalizeFearAndGreed,
+  normalizePrices,
+  MARKET_COIN_IDS,
+} from '../../src/lib/market-data.js';
+
 export const onRequestGet = async () => {
-  try {
-    const [pricesRes, fngRes] = await Promise.all([
-      fetch(
-        'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin,ripple,dogecoin,tether&vs_currencies=brl&include_24hr_change=true',
-        { headers: { 'User-Agent': 'BlocoCrypto-Portal/1.0' } }
-      ),
-      fetch('https://api.alternative.me/fng/?limit=1'),
-    ]);
+  const coinIds = MARKET_COIN_IDS.join(',');
+  const requests = await Promise.allSettled([
+    fetchJson(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${coinIds}&vs_currencies=brl&include_24hr_change=true`
+    ),
+    fetchJson('https://api.alternative.me/fng/?limit=1'),
+  ]);
 
-    const prices = await pricesRes.json();
-    const fngData = (await fngRes.json()) as { data?: Array<{ value: string; value_classification: string }> };
+  const prices = requests[0].status === 'fulfilled'
+    ? normalizePrices(requests[0].value)
+    : null;
+  const fearAndGreed = requests[1].status === 'fulfilled'
+    ? normalizeFearAndGreed(requests[1].value)
+    : null;
 
-    const fngEntry = fngData.data?.[0];
-
-    return new Response(
-      JSON.stringify({
-        prices,
-        fearAndGreed: fngEntry
-          ? { value: Number(fngEntry.value), label: fngEntry.value_classification }
-          : null,
-        updatedAt: new Date().toISOString(),
-      }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'public, max-age=300',
-        },
-      }
+  if (!prices && !fearAndGreed) {
+    return apiJson(
+      { error: 'Dados de mercado temporariamente indisponíveis.', prices: null, fearAndGreed: null },
+      { status: 503, cache: false }
     );
-  } catch {
-    return new Response(JSON.stringify({ prices: null, fearAndGreed: null }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
   }
+
+  return apiJson({
+    prices,
+    fearAndGreed,
+    sources: {
+      coingecko: prices ? 'ok' : 'unavailable',
+      alternativeMe: fearAndGreed ? 'ok' : 'unavailable',
+    },
+    updatedAt: new Date().toISOString(),
+  });
 };
