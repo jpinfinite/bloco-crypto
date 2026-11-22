@@ -12,15 +12,14 @@ jobs:
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4
-
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
-
       - name: Instalar dependências
         run: npm ci
-
+      - name: Testes automatizados
+        run: npm test
       - name: Build estático de produção
         run: npm run build

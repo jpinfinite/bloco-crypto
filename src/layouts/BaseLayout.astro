@@ -6,12 +6,30 @@ import TickerBar from '../components/TickerBar.astro';
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
+  noIndex?: boolean;
+  structuredData?: Record<string, unknown>;
 }
 
 const {
   title,
   description = 'Finanças, Educação & Infraestrutura Cripto sem ruído e sem conselho de investimento.',
+  ogImage = '/images/logo-alpha.png',
+  noIndex = false,
+  structuredData,
 } = Astro.props;
+
+const siteUrl = Astro.site ?? new URL('https://bloco-crypto.pages.dev');
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const pageTitle = `${title} | BLOCO\\CRYPTO`;
+const absoluteOgImage = new URL(ogImage, siteUrl).href;
+const pageSchema = structuredData ?? {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'BLOCO\\CRYPTO',
+  url: siteUrl.href,
+  inLanguage: 'pt-BR',
+};
 ---
 
 <!doctype html>
@@ -82,7 +100,7 @@ const {
         <div class="flex items-center gap-3">
           <a
             href="/glossario"
-            aria-label="Buscar"
+            aria-label="Explorar notícias" title="Explorar notícias"
             class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,7 +178,7 @@ const {
                   <span>↗</span>
                 </a>
               </li>
-              <li><span class="text-emerald-500 font-mono text-[11px]">● Servidores 100% Operacionais</span></li>
+              <li><span class="text-emerald-500 font-mono text-[11px]">● Status das fontes externas pode variar</span></li>
             </ul>
           </div>
         </div>
