@@ -1,0 +1,77 @@
+---
+// Seção Especial de Colunistas e Artigos de Opinião Técnica
+const colunistas = [
+  {
+    nome: 'Dr. Lucas Sampaio',
+    funcao: 'Especialista em Regulação & PSAVs',
+    titulo: 'A responsabilidade civil dos operadores de contratos inteligentes após as decisões do STJ',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+    slug: '/noticias/segregacao-patrimonial',
+  },
+  {
+    nome: 'Mariana Duarte',
+    funcao: 'Engenheira de Protocolos & L2s',
+    titulo: 'Por que o custo de liquidação de rollups ainda não atingiu seu piso teórico pós-blobs',
+    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80',
+    slug: '/noticias/comparativo-layer-2',
+  },
+  {
+    nome: 'Carlos Meneses',
+    funcao: 'Pesquisador On-Chain & Auditor',
+    titulo: 'O cemitério de protocolos: lições de 5 anos auditando pontes entre cadeias heterogêneas',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+    slug: '/noticias/revogar-permissoes',
+  },
+  {
+    nome: 'Felipe Alencar',
+    funcao: 'Analista de Infraestrutura Cripto',
+    titulo: 'A anatomia do MEV privado e seu impacto invisível na execução de swaps em DEXs',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+    slug: '/educacao/o-que-e-impermanent-loss',
+  },
+];
+---
+
+<section class="mb-14 p-6 sm:p-8 rounded-3xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+  <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200 dark:border-slate-800">
+    <div>
+      <span class="text-xs font-mono uppercase text-brand-orange font-bold">Artigos Especiais</span>
+      <h2 class="font-display font-bold text-2xl text-slate-900 dark:text-slate-100">
+        Colunistas & Análises Aprofundadas
+      </h2>
+    </div>
+    <span class="text-xs font-mono text-slate-500 hidden sm:inline">CONTEÚDO EXCLUSIVO</span>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    {colunistas.map((c) => (
+      <a href={c.slug} class="group p-5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-brand-orange/50 transition shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <img
+              src={c.avatar}
+              alt={c.nome}
+              class="w-12 h-12 rounded-full object-cover ring-2 ring-brand-orange/40"
+            />
+            <div>
+              <h3 class="font-display font-bold text-sm text-slate-900 dark:text-slate-100 leading-tight">
+                {c.nome}
+              </h3>
+              <span class="text-[11px] font-mono text-slate-500 block leading-tight mt-0.5">
+                {c.funcao}
+              </span>
+            </div>
+          </div>
+
+          <h4 class="font-display font-bold text-sm text-slate-800 dark:text-slate-200 group-hover:text-brand-orange transition leading-snug">
+            "{c.titulo}"
+          </h4>
+        </div>
+
+        <div class="pt-4 mt-4 border-t border-slate-100 dark:border-slate-900 flex justify-end">
+          <span class="text-xs font-mono text-brand-orange font-bold">LER ANÁLISE →</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>

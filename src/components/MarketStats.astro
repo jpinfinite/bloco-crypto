@@ -1,0 +1,94 @@
+---
+// Painéis de Estatísticas Rápidas: Fear & Greed + Top Altas + Top Baixas
+const gainers = [
+  { name: 'XRP', ticker: 'XRP', price: 'R$ 8,42', change: '+8.15%' },
+  { name: 'Solana', ticker: 'SOL', price: 'R$ 1.180', change: '+5.61%' },
+  { name: 'Avalanche', ticker: 'AVAX', price: 'R$ 192,40', change: '+4.20%' },
+];
+
+const losers = [
+  { name: 'Dogecoin', ticker: 'DOGE', price: 'R$ 1,24', change: '-1.12%' },
+  { name: 'Cardano', ticker: 'ADA', price: 'R$ 4,12', change: '-0.85%' },
+  { name: 'BNB', ticker: 'BNB', price: 'R$ 3.820', change: '-0.38%' },
+];
+---
+
+<section class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
+  <!-- Card 1: Fear & Greed Index (Medo e Ganância) -->
+  <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-mono uppercase text-slate-500 font-semibold">Sentimento de Mercado</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+      </div>
+      <h3 class="font-display font-bold text-base mb-2">Índice Medo & Ganância</h3>
+      
+      <!-- Mostrador semi-circular simulado -->
+      <div class="my-4 flex items-center gap-4">
+        <div class="relative w-20 h-20 rounded-full border-4 border-emerald-500 flex items-center justify-center font-display font-extrabold text-2xl text-emerald-600 dark:text-emerald-400">
+          76
+        </div>
+        <div>
+          <span class="text-xs font-mono uppercase text-emerald-600 dark:text-emerald-400 font-bold block">
+            Ganância Extrema
+          </span>
+          <span class="text-xs text-slate-500 dark:text-slate-400">
+            Ontem: 74 • Mês passado: 68
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] font-mono text-slate-400">
+      Histórico baseado em volatilidade e volume on-chain.
+    </div>
+  </div>
+
+  <!-- Card 2: Maiores Altas 24h -->
+  <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-xs font-mono uppercase text-emerald-600 dark:text-emerald-400 font-semibold">Desempenho Diário</span>
+      <span class="text-xs font-mono text-slate-400">24H</span>
+    </div>
+    <h3 class="font-display font-bold text-base mb-3">Maiores Altas</h3>
+
+    <div class="space-y-3 font-mono text-xs">
+      {gainers.map((g) => (
+        <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/60">
+          <div>
+            <span class="font-bold text-slate-800 dark:text-slate-200">{g.ticker}</span>
+            <span class="text-slate-400 text-[11px] ml-1">{g.name}</span>
+          </div>
+          <div class="text-right">
+            <span class="block font-semibold text-slate-700 dark:text-slate-300">{g.price}</span>
+            <span class="text-emerald-600 dark:text-emerald-400 font-bold text-[11px]">{g.change}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Card 3: Maiores Baixas 24h -->
+  <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-xs font-mono uppercase text-rose-500 font-semibold">Correções</span>
+      <span class="text-xs font-mono text-slate-400">24H</span>
+    </div>
+    <h3 class="font-display font-bold text-base mb-3">Maiores Baixas</h3>
+
+    <div class="space-y-3 font-mono text-xs">
+      {losers.map((l) => (
+        <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/60">
+          <div>
+            <span class="font-bold text-slate-800 dark:text-slate-200">{l.ticker}</span>
+            <span class="text-slate-400 text-[11px] ml-1">{l.name}</span>
+          </div>
+          <div class="text-right">
+            <span class="block font-semibold text-slate-700 dark:text-slate-300">{l.price}</span>
+            <span class="text-rose-500 font-bold text-[11px]">{l.change}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

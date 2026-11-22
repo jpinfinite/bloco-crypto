@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import TopAlertBar from '../components/TopAlertBar.astro';
+import TickerBar from '../components/TickerBar.astro';
 
 interface Props {
   title: string;
@@ -25,7 +27,7 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -37,85 +39,118 @@ const {
   </head>
 
   <body class="bg-brand-light text-slate-900 dark:bg-brand-dark dark:text-slate-100 font-sans antialiased transition-colors duration-200 min-h-screen flex flex-col">
-    <!-- Barra Técnica Superior -->
-    <div class="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-xs font-mono py-1.5 px-4">
-      <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2 text-slate-600 dark:text-slate-400">
-        <div class="flex items-center gap-4">
-          <span>INFRAESTRUTURA & EDUCAÇÃO</span>
-          <span class="hidden sm:inline text-slate-300 dark:text-slate-700">|</span>
-          <span class="hidden sm:inline">CONTEÚDO ESTRITAMENTE INFORMATIVO</span>
-        </div>
-        <div class="flex items-center gap-3">
-          <div id="network-metrics" class="flex items-center gap-3 text-slate-500">
-            <span class="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              SISTEMA OPERACIONAL
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Faixa Superior de Notícia Urgente / Alerta -->
+    <TopAlertBar />
 
     <!-- Header Principal -->
-    <header class="sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-brand-dark/90 backdrop-blur">
-      <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <header class="sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-brand-dark/95 backdrop-blur">
+      <div class="max-w-7xl mx-auto px-4 h-18 flex items-center justify-between gap-4">
         <!-- Logo Principal com Fundo Preto Fixo (#000000) -->
-        <a href="/" class="flex items-center group">
-          <div class="bg-black px-3.5 py-2 rounded-lg border border-slate-800 shadow-md transition-transform group-hover:scale-[1.02] flex items-center">
+        <a href="/" class="flex items-center group shrink-0">
+          <div class="bg-black px-3.5 py-2 rounded-xl border border-slate-800 shadow-md transition-transform group-hover:scale-[1.02] flex items-center">
             <img
               src="/images/logo-alpha.png"
               alt="BLOCO\CRYPTO"
-              class="h-7 sm:h-8 w-auto object-contain block"
+              class="h-8 sm:h-9 w-auto object-contain block"
               loading="eager"
               decoding="async"
             />
           </div>
         </a>
 
-        <!-- Navegação -->
-        <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600 dark:text-slate-300">
+        <!-- Navegação Portal -->
+        <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-700 dark:text-slate-300">
           <a href="/noticias" class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">Notícias</a>
           <a href="/educacao" class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">Educação</a>
           <a href="/ferramentas" class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">Ferramentas</a>
           <a href="/glossario" class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">Glossário</a>
+          <a href="/sobre" class="hover:text-brand-cobalt dark:hover:text-brand-cyan transition">Editorial</a>
         </nav>
 
-        <!-- Botão Tema Claro/Escuro -->
-        <button
-          id="theme-toggle"
-          type="button"
-          aria-label="Alternar tema"
-          class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-mono"
-        >
-          <span class="dark:hidden">DARK</span>
-          <span class="hidden dark:inline">LIGHT</span>
-        </button>
+        <!-- Ações: Busca + Toggle Tema -->
+        <div class="flex items-center gap-3">
+          <a
+            href="/glossario"
+            aria-label="Buscar"
+            class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </a>
+
+          <button
+            id="theme-toggle"
+            type="button"
+            aria-label="Alternar tema"
+            class="p-2 px-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-mono font-bold"
+          >
+            <span class="dark:hidden">DARK</span>
+            <span class="hidden dark:inline">LIGHT</span>
+          </button>
+        </div>
       </div>
     </header>
 
+    <!-- Ticker Horizontal de Cotações Ao Vivo -->
+    <TickerBar />
+
     <!-- Conteúdo Principal -->
-    <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
       <slot />
     </main>
 
-    <!-- Footer com Disclaimer -->
-    <footer class="border-t border-slate-200 dark:border-slate-800 mt-16 bg-white dark:bg-slate-950">
-      <div class="max-w-6xl mx-auto px-4 py-10 space-y-6">
-        <div class="p-4 rounded-lg border border-amber-500/30 bg-amber-500/5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-          <strong class="text-amber-600 dark:text-amber-400 font-mono uppercase">Aviso de Isenção de Responsabilidade:</strong>
-          O <strong>BLOCO\CRYPTO</strong> é um portal independente dedicado exclusivamente à educação técnica, infraestrutura blockchain e notícias factuais. Nenhum artigo, dado ou calculadora publicada neste site constitui recomendação de investimento, análise de valores mobiliários ou consultoria financeira.
+    <!-- Footer Completo de Portal com Disclaimer Regulatório -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 mt-20 bg-white dark:bg-slate-950">
+      <div class="max-w-7xl mx-auto px-4 py-12 space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div class="space-y-3">
+            <div class="inline-block bg-black px-3.5 py-2 rounded-xl border border-slate-800">
+              <img src="/images/logo-alpha.png" alt="BLOCO\CRYPTO" class="h-7 w-auto object-contain" />
+            </div>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Portal independente especializado em regulação, segurança, infraestrutura blockchain e educação técnica sem viés especulativo.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="font-display font-bold text-sm mb-3">Editorias</h4>
+            <ul class="text-xs space-y-2 text-slate-500">
+              <li><a href="/noticias" class="hover:underline">Boletim Técnico</a></li>
+              <li><a href="/noticias" class="hover:underline">Regulação & Leis</a></li>
+              <li><a href="/noticias" class="hover:underline">Segurança On-Chain</a></li>
+              <li><a href="/noticias" class="hover:underline">Redes Layer 2</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-display font-bold text-sm mb-3">Recursos & Ferramentas</h4>
+            <ul class="text-xs space-y-2 text-slate-500">
+              <li><a href="/ferramentas/preco-medio" class="hover:underline">Calculadora Preço Médio (DCA)</a></li>
+              <li><a href="/ferramentas/impermanent-loss" class="hover:underline">Simulador Impermanent Loss</a></li>
+              <li><a href="/educacao" class="hover:underline">Trilhas de Autocustódia</a></li>
+              <li><a href="/glossario" class="hover:underline">Glossário Cripto Interativo</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-display font-bold text-sm mb-3">Institucional</h4>
+            <ul class="text-xs space-y-2 text-slate-500">
+              <li><a href="/sobre" class="hover:underline">Linha Editorial & Metodologia</a></li>
+              <li><a href="/privacidade" class="hover:underline">Política de Privacidade</a></li>
+              <li><span class="text-emerald-500 font-mono text-[11px]">● Servidores 100% Operacionais</span></li>
+            </ul>
+          </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} BLOCO\CRYPTO — Finanças, Educação & Infraestrutura.</p>
-          <div class="flex flex-wrap gap-4">
-            <a href="/noticias" class="hover:underline">Notícias</a>
-            <a href="/educacao" class="hover:underline">Educação</a>
-            <a href="/ferramentas" class="hover:underline">Ferramentas</a>
-            <a href="/glossario" class="hover:underline">Glossário</a>
-            <a href="/sobre" class="hover:underline">Linha Editorial</a>
-            <a href="/privacidade" class="hover:underline">Privacidade</a>
-          </div>
+        <div class="p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          <strong class="text-amber-600 dark:text-amber-400 font-mono uppercase">Aviso Legal:</strong>
+          O <strong>BLOCO\CRYPTO</strong> é um veículo de informação técnica e educação. Nenhuma matéria, cálculo matemático ou estatística publicada neste portal representa recomendação de investimento ou consultoria financeira.
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4 pt-4 border-t border-slate-100 dark:border-slate-900">
+          <p>© {new Date().getFullYear()} BLOCO\CRYPTO — Todos os direitos reservados.</p>
+          <p class="font-mono text-[11px]">Desenvolvido com Astro & Cloudflare Edge Network</p>
         </div>
       </div>
     </footer>
@@ -127,28 +162,25 @@ const {
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
       });
 
-      // Ticker de rede em tempo real
+      // Ticker dinâmico em tempo real
       fetch('/api/network-status')
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
           if (!data) return;
-          const container = document.getElementById('network-metrics');
+          const container = document.getElementById('live-dynamic-ticker');
           if (!container) return;
 
-          const parts: string[] = [];
+          const items: string[] = [];
           if (data.btcSatVb !== null) {
-            parts.push(`Taxa BTC: ${data.btcSatVb} sat/vB`);
+            items.push(`FEE: ${data.btcSatVb} sat/vB`);
           }
           if (data.usdBrl !== null) {
-            parts.push(`USD/BRL: R$ ${data.usdBrl}`);
+            items.push(`USD: R$ ${data.usdBrl}`);
           }
 
-          if (parts.length > 0) {
+          if (items.length > 0) {
             container.innerHTML = `
-              <span class="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                ${parts.join(' • ')}
-              </span>
+              <span class="text-brand-cobalt dark:text-brand-cyan font-bold">${items.join(' • ')}</span>
             `;
           }
         })

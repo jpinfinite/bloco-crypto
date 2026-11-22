@@ -1,0 +1,111 @@
+---
+import { getCollection } from 'astro:content';
+
+const todasNoticias = await getCollection('noticias');
+const sortedPosts = todasNoticias.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Notícias complementares de exemplo com fotos para preencher o grid editorial
+const visualPosts = [
+  {
+    title: 'Desenvolvedores lançam nova versão do Bitcoin Core para mitigar vulnerabilidade de DoS',
+    category: 'INFRAESTRUTURA',
+    time: '3 min',
+    date: '22/11/2026',
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80',
+    slug: '/noticias/comparativo-layer-2',
+  },
+  {
+    title: 'Receita Federal publica orientação complementar sobre declaração de airdrops e staking',
+    category: 'REGULAÇÃO',
+    time: '5 min',
+    date: '21/11/2026',
+    image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80',
+    slug: '/noticias/segregacao-patrimonial',
+  },
+  {
+    title: 'Volume em DEXs supera recorde trimestral impulsionado por baixas taxas em Layer 2',
+    category: 'MERCADO',
+    time: '4 min',
+    date: '21/11/2026',
+    image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80',
+    slug: '/noticias/comparativo-layer-2',
+  },
+  {
+    title: 'Phishing por meio de assinaturas Permit2: entenda o novo vetor de ataque em carteiras EVM',
+    category: 'SEGURANÇA',
+    time: '6 min',
+    date: '20/11/2026',
+    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=80',
+    slug: '/noticias/revogar-permissoes',
+  },
+  {
+    title: 'Bancos centrais globais avançam em testes de liquidação atômica com stablecoins reguladas',
+    category: 'REGULAÇÃO',
+    time: '4 min',
+    date: '20/11/2026',
+    image: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=600&q=80',
+    slug: '/noticias/segregacao-patrimonial',
+  },
+  {
+    title: 'Como auditar nós validadores e verificar o tempo de atividade independente de infraestrutura',
+    category: 'INFRAESTRUTURA',
+    time: '5 min',
+    date: '19/11/2026',
+    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80',
+    slug: '/noticias/comparativo-layer-2',
+  },
+];
+---
+
+<section class="mb-14">
+  <div class="flex items-center justify-between pb-3 mb-6 border-b border-slate-200 dark:border-slate-800">
+    <div class="flex items-center gap-2.5">
+      <div class="w-3 h-3 rounded bg-brand-cobalt dark:bg-brand-cyan"></div>
+      <h2 class="font-display font-bold text-xl text-slate-900 dark:text-slate-100 tracking-tight">
+        Últimas Notícias & Relatórios On-Chain
+      </h2>
+    </div>
+    <a href="/noticias" class="text-xs font-mono font-bold text-brand-cobalt dark:text-brand-cyan hover:underline">
+      VER TODAS AS NOTÍCIAS →
+    </a>
+  </div>
+
+  <!-- Grid 3 Colunas com Imagens -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {visualPosts.map((p) => (
+      <article class="group flex flex-col justify-between rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-brand-cobalt/40 dark:hover:border-brand-cyan/40 transition shadow-sm">
+        <a href={p.slug} class="block overflow-hidden relative aspect-video bg-slate-950">
+          <img
+            src={p.image}
+            alt={p.title}
+            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+          <span class="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded bg-black/75 text-white backdrop-blur text-[10px] font-mono font-bold uppercase">
+            {p.category}
+          </span>
+        </a>
+
+        <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-mono text-slate-400 mb-2">
+              <span>{p.date}</span>
+              <span>•</span>
+              <span>{p.time}</span>
+            </div>
+            <h3 class="font-display font-bold text-base leading-snug group-hover:text-brand-cobalt dark:group-hover:text-brand-cyan transition">
+              <a href={p.slug}>{p.title}</a>
+            </h3>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex justify-between items-center text-xs font-mono">
+            <span class="text-slate-500">BLOCO\CRYPTO</span>
+            <a href={p.slug} class="text-brand-cobalt dark:text-brand-cyan font-bold hover:underline">
+              LER →
+            </a>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
