@@ -1,83 +1,54 @@
 ---
-// Bento Grid Magazine: Manchete Principal + 2 Destaques Secundários com imagens locais e links exclusivos
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('noticias')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const featured = posts.find((post) => post.data.featured) ?? posts[0];
+const secondary = posts.filter((post) => post.id !== featured?.id).slice(0, 2);
+const images: Record<string, string> = {
+  'bitcoin-core-mitigacao-dos': '/images/posts/bitcoin-core.jpg',
+  'bitcoin-core-vulnerability': '/images/posts/bitcoin-core.jpg',
+  'phishing-assinaturas-permit2': '/images/posts/permit2.jpg',
+  'phishing-permit2-evm': '/images/posts/permit2.jpg',
+  'volume-dex-layer-2': '/images/posts/dex.jpg',
+  'dex-recorde-layer-2': '/images/posts/dex.jpg',
+  'receita-federal-airdrops-staking': '/images/posts/receita.jpg',
+  'receita-federal-declaracao-cripto': '/images/posts/receita.jpg',
+  'bancos-centrais-liquidacao-stablecoins': '/images/posts/bancos-centrais.jpg',
+  'auditoria-nos-validadores': '/images/posts/validadores.jpg',
+  'como-auditar-nos-validadores': '/images/posts/validadores.jpg',
+};
+const imageFor = (id: string) => images[id] ?? '/images/posts/seguranca.jpg';
 ---
 
-<section class="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-10">
-  <!-- Destaque Principal (Hero 7 cols) -->
-  <div class="lg:col-span-7 flex flex-col justify-between">
-    <a
-      href="/noticias/bitcoin-core-mitigacao-dos"
-      class="group relative block overflow-hidden rounded-2xl bg-slate-900 border border-slate-200 dark:border-slate-800 h-[380px] sm:h-[440px] shadow-sm"
-    >
-      <img
-        src="/images/posts/bitcoin-core.jpg"
-        alt="Bitcoin Core e Mitigação de DoS"
-        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-60"
-        loading="eager"
-      />
-      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-
-      <div class="absolute bottom-0 inset-x-0 p-6 sm:p-8 space-y-3">
-        <div class="flex items-center gap-2.5">
-          <span class="px-2.5 py-0.5 rounded bg-brand-orange text-black font-mono text-[11px] font-bold uppercase">
-            INFRAESTRUTURA DE REDE
-          </span>
-          <span class="text-xs font-mono text-slate-300">Leitura: 3 min</span>
+{featured && (
+  <section class="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-10">
+    <div class="lg:col-span-7 flex flex-col justify-between">
+      <a href={`/noticias/${featured.id}`} class="group relative block overflow-hidden rounded-2xl bg-slate-900 border border-slate-200 dark:border-slate-800 h-[380px] sm:h-[440px] shadow-sm">
+        <img src={imageFor(featured.id)} alt={featured.data.title} class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-60" loading="eager" fetchpriority="high" decoding="async" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+        <div class="absolute bottom-0 inset-x-0 p-6 sm:p-8 space-y-3">
+          <div class="flex items-center gap-2.5">
+            <span class="px-2.5 py-0.5 rounded bg-brand-orange text-black font-mono text-[11px] font-bold uppercase">{featured.data.category}</span>
+            <time datetime={featured.data.pubDate.toISOString()} class="text-xs font-mono text-slate-300">{featured.data.pubDate.toLocaleDateString('pt-BR')} • {featured.data.readingTime}</time>
+          </div>
+          <h1 class="font-display font-bold text-2xl sm:text-3xl lg:text-4xl text-white leading-tight group-hover:text-amber-400 transition">{featured.data.title}</h1>
+          <p class="text-sm text-slate-300 line-clamp-2 leading-relaxed">{featured.data.description}</p>
         </div>
-
-        <h1 class="font-display font-bold text-2xl sm:text-3xl lg:text-4xl text-white leading-tight group-hover:text-amber-400 transition">
-          Desenvolvedores lançam atualização do Bitcoin Core para mitigar vetor de DoS
-        </h1>
-
-        <p class="text-sm text-slate-300 line-clamp-2 leading-relaxed">
-          Nova versão corrige falha na camada de comunicação P2P identificada durante auditoria de buffers de memória em nós completos.
-        </p>
-      </div>
-    </a>
-  </div>
-
-  <!-- Coluna Central: 2 Notícias Médias (5 cols) -->
-  <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
-    <a
-      href="/noticias/phishing-assinaturas-permit2"
-      class="group relative overflow-hidden rounded-2xl bg-slate-900 border border-slate-200 dark:border-slate-800 h-[180px] sm:h-[210px] shadow-sm flex flex-col justify-end p-5"
-    >
-      <img
-        src="/images/posts/seguranca.jpg"
-        alt="Smart Contracts Security"
-        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-50"
-        loading="eager"
-      />
-      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
-      <div class="relative z-10 space-y-1.5">
-        <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-mono text-[10px] font-bold uppercase inline-block">
-          SEGURANÇA ON-CHAIN
-        </span>
-        <h2 class="font-display font-bold text-base sm:text-lg text-white group-hover:text-brand-cyan transition leading-snug">
-          Phishing via assinaturas Permit2: entenda o vetor de ataque em carteiras EVM
-        </h2>
-      </div>
-    </a>
-
-    <a
-      href="/noticias/volume-dex-layer-2"
-      class="group relative overflow-hidden rounded-2xl bg-slate-900 border border-slate-200 dark:border-slate-800 h-[180px] sm:h-[210px] shadow-sm flex flex-col justify-end p-5"
-    >
-      <img
-        src="/images/posts/layer-2.jpg"
-        alt="Layer 2 Rollups"
-        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-50"
-        loading="eager"
-      />
-      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
-      <div class="relative z-10 space-y-1.5">
-        <span class="px-2 py-0.5 rounded bg-brand-cyan/20 text-brand-cyan font-mono text-[10px] font-bold uppercase inline-block">
-          MERCADO & DEFI
-        </span>
-        <h2 class="font-display font-bold text-base sm:text-lg text-white group-hover:text-brand-cyan transition leading-snug">
-          Volume em DEXs cresce impulsionado pela redução de taxas em redes Layer 2
-        </h2>
-      </div>
-    </a>
-  </div>
-</section>
+      </a>
+    </div>
+    <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
+      {secondary.map((post) => (
+        <a href={`/noticias/${post.id}`} class="group relative overflow-hidden rounded-2xl bg-slate-900 border border-slate-200 dark:border-slate-800 h-[180px] sm:h-[210px] shadow-sm flex flex-col justify-end p-5">
+          <img src={imageFor(post.id)} alt={post.data.title} class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-50" loading="lazy" decoding="async" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
+          <div class="relative z-10 space-y-1.5">
+            <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[10px] font-bold uppercase inline-block">{post.data.category}</span>
+            <h2 class="font-display font-bold text-base sm:text-lg text-white group-hover:text-brand-cyan transition leading-snug">{post.data.title}</h2>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+)}

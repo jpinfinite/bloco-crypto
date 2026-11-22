@@ -6,12 +6,32 @@ import TickerBar from '../components/TickerBar.astro';
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  noIndex?: boolean;
+  structuredData?: Record<string, unknown>;
 }
 
 const {
   title,
   description = 'Finanças, Educação & Infraestrutura Cripto sem ruído e sem conselho de investimento.',
+  ogImage = '/images/logo-alpha.png',
+  ogType = 'website',
+  noIndex = false,
+  structuredData,
 } = Astro.props;
+
+const siteUrl = Astro.site ?? new URL('https://bloco-crypto.pages.dev');
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const pageTitle = `${title} | BLOCO\\CRYPTO`;
+const absoluteOgImage = new URL(ogImage, siteUrl).href;
+const pageSchema = structuredData ?? {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'BLOCO\\CRYPTO',
+  url: siteUrl.href,
+  inLanguage: 'pt-BR',
+};
 ---
 
 <!doctype html>
@@ -19,8 +39,22 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} | BLOCO\CRYPTO</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="BLOCO\\CRYPTO" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={absoluteOgImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteOgImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(pageSchema).replace(/</g, '\\u003c')} />
     <link rel="icon" type="image/png" href="/images/favicon.png" />
 
     <!-- Google Fonts: Chakra Petch, Space Grotesk, Inter & JetBrains Mono -->
@@ -82,7 +116,7 @@ const {
         <div class="flex items-center gap-3">
           <a
             href="/glossario"
-            aria-label="Buscar"
+            aria-label="Explorar glossário" title="Explorar glossário"
             class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,7 +194,7 @@ const {
                   <span>↗</span>
                 </a>
               </li>
-              <li><span class="text-emerald-500 font-mono text-[11px]">● Servidores 100% Operacionais</span></li>
+              <li><span class="text-emerald-500 font-mono text-[11px]">● Status das fontes externas pode variar</span></li>
             </ul>
           </div>
         </div>

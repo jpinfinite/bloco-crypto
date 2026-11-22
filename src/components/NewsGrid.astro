@@ -1,102 +1,53 @@
 ---
-// Grid de Notícias com links exclusivos para cada artigo publicado e imagens locais
-const posts = [
-  {
-    title: 'Receita Federal detalha regras de reporte para recompensas de staking e airdrops',
-    category: 'REGULAÇÃO',
-    time: '5 min',
-    date: '21/11/2026',
-    image: '/images/posts/receita.jpg',
-    slug: '/noticias/receita-federal-airdrops-staking',
-  },
-  {
-    title: 'Volume em DEXs cresce impulsionado pela redução de taxas em redes Layer 2',
-    category: 'MERCADO',
-    time: '4 min',
-    date: '21/11/2026',
-    image: '/images/posts/dex.jpg',
-    slug: '/noticias/volume-dex-layer-2',
-  },
-  {
-    title: 'Bancos centrais avançam em testes de liquidação atômica com ativos tokenizados',
-    category: 'REGULAÇÃO',
-    time: '4 min',
-    date: '20/11/2026',
-    image: '/images/posts/bancos-centrais.jpg',
-    slug: '/noticias/bancos-centrais-liquidacao-stablecoins',
-  },
-  {
-    title: 'Phishing via assinaturas Permit2: entenda o vetor de ataque em carteiras EVM',
-    category: 'SEGURANÇA',
-    time: '6 min',
-    date: '20/11/2026',
-    image: '/images/posts/permit2.jpg',
-    slug: '/noticias/phishing-assinaturas-permit2',
-  },
-  {
-    title: 'Como auditar nós validadores e verificar o tempo de atividade da infraestrutura',
-    category: 'INFRAESTRUTURA',
-    time: '5 min',
-    date: '19/11/2026',
-    image: '/images/posts/validadores.jpg',
-    slug: '/noticias/como-auditar-nos-validadores',
-  },
-  {
-    title: 'Desenvolvedores lançam atualização do Bitcoin Core para mitigar vetor de DoS',
-    category: 'INFRAESTRUTURA',
-    time: '3 min',
-    date: '22/11/2026',
-    image: '/images/posts/hardware.jpg',
-    slug: '/noticias/bitcoin-core-mitigacao-dos',
-  },
-];
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('noticias'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 6);
+const images: Record<string, string> = {
+  'bitcoin-core-mitigacao-dos': '/images/posts/bitcoin-core.jpg',
+  'bitcoin-core-vulnerability': '/images/posts/bitcoin-core.jpg',
+  'phishing-assinaturas-permit2': '/images/posts/permit2.jpg',
+  'phishing-permit2-evm': '/images/posts/permit2.jpg',
+  'volume-dex-layer-2': '/images/posts/dex.jpg',
+  'dex-recorde-layer-2': '/images/posts/dex.jpg',
+  'receita-federal-airdrops-staking': '/images/posts/receita.jpg',
+  'receita-federal-declaracao-cripto': '/images/posts/receita.jpg',
+  'bancos-centrais-liquidacao-stablecoins': '/images/posts/bancos-centrais.jpg',
+  'auditoria-nos-validadores': '/images/posts/validadores.jpg',
+  'como-auditar-nos-validadores': '/images/posts/validadores.jpg',
+};
+const imageFor = (id: string) => images[id] ?? '/images/posts/seguranca.jpg';
 ---
 
 <section class="mb-14">
   <div class="flex items-center justify-between pb-3 mb-6 border-b border-slate-200 dark:border-slate-800">
     <div class="flex items-center gap-2.5">
       <div class="w-3 h-3 rounded bg-brand-cobalt dark:bg-brand-cyan"></div>
-      <h2 class="font-display font-bold text-xl text-slate-900 dark:text-slate-100 tracking-tight">
-        Últimas Notícias & Relatórios On-Chain
-      </h2>
+      <h2 class="font-display font-bold text-xl text-slate-900 dark:text-slate-100 tracking-tight">Últimas Notícias & Relatórios On-Chain</h2>
     </div>
-    <a href="/noticias" class="text-xs font-mono font-bold text-brand-cobalt dark:text-brand-cyan hover:underline">
-      VER TODAS AS NOTÍCIAS →
-    </a>
+    <a href="/noticias" class="text-xs font-mono font-bold text-brand-cobalt dark:text-brand-cyan hover:underline">VER TODAS AS NOTÍCIAS →</a>
   </div>
-
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    {posts.map((p) => (
+    {posts.map((post) => (
       <article class="group flex flex-col justify-between rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-brand-cobalt/40 dark:hover:border-brand-cyan/40 transition shadow-sm">
-        <a href={p.slug} class="block overflow-hidden relative aspect-video bg-slate-950">
-          <img
-            src={p.image}
-            alt={p.title}
-            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
-          />
-          <span class="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded bg-black/75 text-white backdrop-blur text-[10px] font-mono font-bold uppercase">
-            {p.category}
-          </span>
+        <a href={`/noticias/${post.id}`} class="block overflow-hidden relative aspect-video bg-slate-950">
+          <img src={imageFor(post.id)} alt={post.data.title} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" decoding="async" />
+          <span class="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded bg-black/75 text-white backdrop-blur text-[10px] font-mono font-bold uppercase">{post.data.category}</span>
         </a>
-
         <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
           <div>
             <div class="flex items-center gap-2 text-xs font-mono text-slate-400 mb-2">
-              <span>{p.date}</span>
-              <span>•</span>
-              <span>{p.time}</span>
+              <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('pt-BR')}</time><span>•</span><span>{post.data.readingTime}</span>
             </div>
             <h3 class="font-display font-bold text-base leading-snug group-hover:text-brand-cobalt dark:group-hover:text-brand-cyan transition">
-              <a href={p.slug}>{p.title}</a>
+              <a href={`/noticias/${post.id}`}>{post.data.title}</a>
             </h3>
+            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400 line-clamp-3">{post.data.description}</p>
           </div>
-
           <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex justify-between items-center text-xs font-mono">
             <span class="text-slate-500">BLOCO\CRYPTO</span>
-            <a href={p.slug} class="text-brand-cobalt dark:text-brand-cyan font-bold hover:underline">
-              LER ARTIGO COMPLETO →
-            </a>
+            <a href={`/noticias/${post.id}`} class="text-brand-cobalt dark:text-brand-cyan font-bold hover:underline">LER ARTIGO →</a>
           </div>
         </div>
       </article>
