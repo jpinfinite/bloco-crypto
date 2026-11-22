@@ -235,9 +235,10 @@ const pageSchema = structuredData ?? {
           }
 
           if (items.length > 0) {
-            container.innerHTML = `
-              <span class="text-brand-cobalt dark:text-brand-cyan font-bold">${items.join(' • ')}</span>
-            `;
+            const tickerText = document.createElement('span');
+            tickerText.className = 'text-brand-cobalt dark:text-brand-cyan font-bold';
+            tickerText.textContent = items.join(' • ');
+            container.replaceChildren(tickerText);
           }
         })
         .catch(() => {});

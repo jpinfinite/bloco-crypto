@@ -43,3 +43,9 @@ test('robots permite rastreamento e aponta para o sitemap gerado', async () => {
   assert.ok(robots.includes('User-agent: *'));
   assert.ok(robots.includes('Sitemap: https://bloco-crypto.pages.dev/sitemap-index.xml'));
 });
+
+test('ticker renderiza dados externos como texto', async () => {
+  const layout = await read('../src/layouts/BaseLayout.astro');
+  assert.ok(layout.includes('tickerText.textContent = items.join'));
+  assert.ok(layout.includes('container.replaceChildren(tickerText)'));
+});
