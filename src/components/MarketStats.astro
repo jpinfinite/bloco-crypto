@@ -1,5 +1,5 @@
 ---
-// Painéis de Estatísticas Rápidas: Fear & Greed + Top Altas + Top Baixas
+// Painéis de Estatísticas Rápidas com atualização dinâmica via API
 const gainers = [
   { name: 'XRP', ticker: 'XRP', price: 'R$ 8,42', change: '+8.15%' },
   { name: 'Solana', ticker: 'SOL', price: 'R$ 1.180', change: '+5.61%' },
@@ -14,33 +14,32 @@ const losers = [
 ---
 
 <section class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
-  <!-- Card 1: Fear & Greed Index (Medo e Ganância) -->
+  <!-- Card 1: Fear & Greed Index (Medo e Ganância) Conectado à API Alternative.me -->
   <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
     <div>
       <div class="flex items-center justify-between mb-3">
-        <span class="text-xs font-mono uppercase text-slate-500 font-semibold">Sentimento de Mercado</span>
+        <span class="text-xs font-mono uppercase text-slate-500 font-semibold">Sentimento On-Chain</span>
         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
       </div>
       <h3 class="font-display font-bold text-base mb-2">Índice Medo & Ganância</h3>
       
-      <!-- Mostrador semi-circular simulado -->
       <div class="my-4 flex items-center gap-4">
-        <div class="relative w-20 h-20 rounded-full border-4 border-emerald-500 flex items-center justify-center font-display font-extrabold text-2xl text-emerald-600 dark:text-emerald-400">
+        <div id="fng-score" class="relative w-20 h-20 rounded-full border-4 border-emerald-500 flex items-center justify-center font-display font-extrabold text-2xl text-emerald-600 dark:text-emerald-400">
           76
         </div>
         <div>
-          <span class="text-xs font-mono uppercase text-emerald-600 dark:text-emerald-400 font-bold block">
+          <span id="fng-label" class="text-xs font-mono uppercase text-emerald-600 dark:text-emerald-400 font-bold block">
             Ganância Extrema
           </span>
           <span class="text-xs text-slate-500 dark:text-slate-400">
-            Ontem: 74 • Mês passado: 68
+            Fonte: Alternative.me Crypto Index
           </span>
         </div>
       </div>
     </div>
 
     <div class="pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] font-mono text-slate-400">
-      Histórico baseado em volatilidade e volume on-chain.
+      Atualizado na borda da Cloudflare a cada 5 min.
     </div>
   </div>
 
@@ -92,3 +91,22 @@ const losers = [
     </div>
   </div>
 </section>
+
+<script>
+  fetch('/api/market')
+    .then((r) => (r.ok ? r.json() : null))
+    .then((data) => {
+      if (!data || !data.fearAndGreed) return;
+      const fng = data.fearAndGreed;
+      const scoreEl = document.getElementById('fng-score');
+      const labelEl = document.getElementById('fng-label');
+
+      if (scoreEl && fng.value !== undefined) {
+        scoreEl.textContent = String(fng.value);
+      }
+      if (labelEl && fng.label) {
+        labelEl.textContent = fng.label;
+      }
+    })
+    .catch(() => {});
+</script>

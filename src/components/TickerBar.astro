@@ -1,13 +1,13 @@
 ---
 // Ticker horizontal com cotações em tempo real e variações 24h
 const tickers = [
-  { symbol: 'BTC', name: 'Bitcoin', price: 'R$ 548.210', change: '+2.84%', up: true },
-  { symbol: 'ETH', name: 'Ethereum', price: 'R$ 18.940', change: '+1.42%', up: true },
-  { symbol: 'SOL', name: 'Solana', price: 'R$ 1.180', change: '+5.61%', up: true },
-  { symbol: 'BNB', name: 'BNB', price: 'R$ 3.820', change: '-0.38%', up: false },
-  { symbol: 'XRP', name: 'XRP', price: 'R$ 8,42', change: '+8.15%', up: true },
-  { symbol: 'DOGE', name: 'Dogecoin', price: 'R$ 1,24', change: '-1.12%', up: false },
-  { symbol: 'USDT', name: 'Tether USD', price: 'R$ 5,82', change: '+0.05%', up: true },
+  { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', price: 'R$ 548.210', change: '+2.84%', up: true },
+  { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', price: 'R$ 18.940', change: '+1.42%', up: true },
+  { id: 'solana', symbol: 'SOL', name: 'Solana', price: 'R$ 1.180', change: '+5.61%', up: true },
+  { id: 'binancecoin', symbol: 'BNB', name: 'BNB', price: 'R$ 3.820', change: '-0.38%', up: false },
+  { id: 'ripple', symbol: 'XRP', name: 'XRP', price: 'R$ 8,42', change: '+8.15%', up: true },
+  { id: 'dogecoin', symbol: 'DOGE', name: 'Dogecoin', price: 'R$ 1,24', change: '-1.12%', up: false },
+  { id: 'tether', symbol: 'USDT', name: 'Tether USD', price: 'R$ 5,82', change: '+0.05%', up: true },
 ];
 ---
 
@@ -19,10 +19,10 @@ const tickers = [
     </div>
 
     {tickers.map((t) => (
-      <div class="flex items-center gap-2">
+      <div data-ticker-id={t.id} class="flex items-center gap-2">
         <span class="font-bold text-slate-800 dark:text-slate-200">{t.symbol}</span>
-        <span class="text-slate-600 dark:text-slate-400">{t.price}</span>
-        <span class={`font-semibold text-[11px] ${t.up ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+        <span class="coin-price text-slate-600 dark:text-slate-400">{t.price}</span>
+        <span class={`coin-change font-semibold text-[11px] ${t.up ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
           {t.change}
         </span>
       </div>
@@ -33,6 +33,42 @@ const tickers = [
     </div>
   </div>
 </div>
+
+<script>
+  fetch('/api/market')
+    .then((r) => (r.ok ? r.json() : null))
+    .then((data) => {
+      if (!data || !data.prices) return;
+      const prices = data.prices;
+
+      document.querySelectorAll('[data-ticker-id]').forEach((el) => {
+        const id = el.getAttribute('data-ticker-id');
+        if (id && prices[id]) {
+          const brl = prices[id].brl;
+          const change = prices[id].brl_24h_change;
+
+          if (brl !== undefined) {
+            const priceEl = el.querySelector('.coin-price');
+            if (priceEl) {
+              priceEl.textContent = brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+          }
+
+          if (change !== undefined) {
+            const changeEl = el.querySelector('.coin-change');
+            if (changeEl) {
+              const isUp = change >= 0;
+              changeEl.textContent = `${isUp ? '+' : ''}${change.toFixed(2)}%`;
+              changeEl.className = `coin-change font-semibold text-[11px] ${
+                isUp ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+              }`;
+            }
+          }
+        }
+      });
+    })
+    .catch(() => {});
+</script>
 
 <style>
   .no-scrollbar::-webkit-scrollbar {

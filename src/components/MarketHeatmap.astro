@@ -1,5 +1,5 @@
 ---
-// Mapa de Calor do Mercado Cripto (Visual Coin360 / Treemap)
+// Mapa de Calor do Mercado Cripto (Visual Coin360 / Treemap com atualização dinâmica)
 ---
 
 <section class="mb-10">
@@ -10,83 +10,117 @@
         Mapa de Calor do Mercado (Top Cap 24h)
       </h2>
     </div>
-    <span class="text-xs font-mono text-slate-500">ATUALIZADO A CADA 5 MIN</span>
+    <span class="text-xs font-mono text-slate-500">ATUALIZADO A CADA 5 MIN • COINGECKO API</span>
   </div>
 
   <div class="grid grid-cols-12 gap-2 h-72 sm:h-80 font-mono text-white select-none">
-    <!-- BTC (Dominância Principal ~50% da área) -->
-    <div class="col-span-12 sm:col-span-6 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl p-4 flex flex-col justify-between shadow-sm hover:brightness-105 transition cursor-pointer">
+    <!-- BTC -->
+    <div id="hm-btc" class="col-span-12 sm:col-span-6 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl p-4 flex flex-col justify-between shadow-sm hover:brightness-105 transition cursor-pointer">
       <div class="flex justify-between items-start">
         <div>
           <span class="text-xs font-bold text-emerald-100 tracking-wider">01</span>
           <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-white">BTC</h3>
           <span class="text-xs text-emerald-100">Bitcoin</span>
         </div>
-        <span class="px-2 py-0.5 rounded bg-black/30 text-xs font-bold text-emerald-200">
+        <span id="hm-btc-change" class="px-2 py-0.5 rounded bg-black/30 text-xs font-bold text-emerald-200">
           +2.84%
         </span>
       </div>
       <div class="flex justify-between items-end">
-        <span class="text-xs text-emerald-100/80">Dom: 58.4%</span>
-        <span class="text-lg sm:text-xl font-bold">R$ 548.210</span>
+        <span class="text-xs text-emerald-100/80">Dom: ~58.4%</span>
+        <span id="hm-btc-price" class="text-lg sm:text-xl font-bold">R$ 548.210</span>
       </div>
     </div>
 
-    <!-- ETH (~25% da área) -->
-    <div class="col-span-7 sm:col-span-3 bg-gradient-to-br from-emerald-700 to-emerald-800 rounded-xl p-3.5 flex flex-col justify-between shadow-sm hover:brightness-105 transition cursor-pointer">
+    <!-- ETH -->
+    <div id="hm-eth" class="col-span-7 sm:col-span-3 bg-gradient-to-br from-emerald-700 to-emerald-800 rounded-xl p-3.5 flex flex-col justify-between shadow-sm hover:brightness-105 transition cursor-pointer">
       <div class="flex justify-between items-start">
         <div>
           <span class="text-[10px] font-bold text-emerald-200">02</span>
           <h3 class="font-display font-bold text-xl text-white">ETH</h3>
           <span class="text-[11px] text-emerald-200">Ethereum</span>
         </div>
-        <span class="px-1.5 py-0.5 rounded bg-black/30 text-[11px] font-bold text-emerald-200">
+        <span id="hm-eth-change" class="px-1.5 py-0.5 rounded bg-black/30 text-[11px] font-bold text-emerald-200">
           +1.42%
         </span>
       </div>
       <div>
-        <span class="text-sm sm:text-base font-bold block">R$ 18.940</span>
-        <span class="text-[10px] text-emerald-200/80">Dom: 13.8%</span>
+        <span id="hm-eth-price" class="text-sm sm:text-base font-bold block">R$ 18.940</span>
+        <span class="text-[10px] text-emerald-200/80">Dom: ~13.8%</span>
       </div>
     </div>
 
-    <!-- Coluna com Alts (SOL, BNB, XRP, ADA) -->
+    <!-- Coluna com Alts (SOL, BNB, XRP, DOGE) -->
     <div class="col-span-5 sm:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
       <!-- SOL -->
-      <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-3 flex flex-col justify-between hover:brightness-105 transition cursor-pointer">
+      <div id="hm-sol" class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-3 flex flex-col justify-between hover:brightness-105 transition cursor-pointer">
         <div class="flex justify-between items-center">
           <span class="font-bold text-sm">SOL</span>
-          <span class="text-[10px] font-bold bg-black/30 px-1 rounded text-emerald-200">+5.6%</span>
+          <span id="hm-sol-change" class="text-[10px] font-bold bg-black/30 px-1 rounded text-emerald-200">+5.6%</span>
         </div>
-        <span class="text-xs font-bold">R$ 1.180</span>
+        <span id="hm-sol-price" class="text-xs font-bold">R$ 1.180</span>
       </div>
 
       <!-- BNB -->
-      <div class="bg-gradient-to-br from-rose-700 to-rose-800 rounded-xl p-3 flex flex-col justify-between hover:brightness-105 transition cursor-pointer">
+      <div id="hm-bnb" class="bg-gradient-to-br from-rose-700 to-rose-800 rounded-xl p-3 flex flex-col justify-between hover:brightness-105 transition cursor-pointer">
         <div class="flex justify-between items-center">
           <span class="font-bold text-sm">BNB</span>
-          <span class="text-[10px] font-bold bg-black/30 px-1 rounded text-rose-200">-0.38%</span>
+          <span id="hm-bnb-change" class="text-[10px] font-bold bg-black/30 px-1 rounded text-rose-200">-0.38%</span>
         </div>
-        <span class="text-xs font-bold">R$ 3.820</span>
+        <span id="hm-bnb-price" class="text-xs font-bold">R$ 3.820</span>
       </div>
 
       <!-- XRP -->
-      <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl p-3 flex flex-col justify-between hover:brightness-105 transition cursor-pointer">
+      <div id="hm-xrp" class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl p-3 flex flex-col justify-between hover:brightness-105 transition cursor-pointer">
         <div class="flex justify-between items-center">
           <span class="font-bold text-sm">XRP</span>
-          <span class="text-[10px] font-bold bg-black/30 px-1 rounded text-emerald-200">+8.1%</span>
+          <span id="hm-xrp-change" class="text-[10px] font-bold bg-black/30 px-1 rounded text-emerald-200">+8.1%</span>
         </div>
-        <span class="text-xs font-bold">R$ 8,42</span>
+        <span id="hm-xrp-price" class="text-xs font-bold">R$ 8,42</span>
       </div>
 
       <!-- DOGE -->
-      <div class="bg-gradient-to-br from-rose-700 to-rose-900 rounded-xl p-3 flex flex-col justify-between hover:brightness-105 transition cursor-pointer">
+      <div id="hm-doge" class="bg-gradient-to-br from-rose-700 to-rose-900 rounded-xl p-3 flex flex-col justify-between hover:brightness-105 transition cursor-pointer">
         <div class="flex justify-between items-center">
           <span class="font-bold text-sm">DOGE</span>
-          <span class="text-[10px] font-bold bg-black/30 px-1 rounded text-rose-200">-1.1%</span>
+          <span id="hm-doge-change" class="text-[10px] font-bold bg-black/30 px-1 rounded text-rose-200">-1.1%</span>
         </div>
-        <span class="text-xs font-bold">R$ 1,24</span>
+        <span id="hm-doge-price" class="text-xs font-bold">R$ 1,24</span>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  fetch('/api/market')
+    .then((r) => (r.ok ? r.json() : null))
+    .then((data) => {
+      if (!data || !data.prices) return;
+      const p = data.prices;
+      const fmt = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const apply = (id: string, coinKey: string) => {
+        if (p[coinKey]) {
+          const price = p[coinKey].brl;
+          const change = p[coinKey].brl_24h_change;
+          const priceEl = document.getElementById(`hm-${id}-price`);
+          const changeEl = document.getElementById(`hm-${id}-change`);
+          if (priceEl && price !== undefined) priceEl.textContent = fmt(price);
+          if (changeEl && change !== undefined) {
+            const isUp = change >= 0;
+            changeEl.textContent = `${isUp ? '+' : ''}${change.toFixed(2)}%`;
+            changeEl.className = `text-[10px] font-bold bg-black/30 px-1 rounded ${
+              isUp ? 'text-emerald-200' : 'text-rose-200'
+            }`;
+          }
+        }
+      };
+
+      apply('btc', 'bitcoin');
+      apply('eth', 'ethereum');
+      apply('sol', 'solana');
+      apply('bnb', 'binancecoin');
+      apply('xrp', 'ripple');
+      apply('doge', 'dogecoin');
+    })
+    .catch(() => {});
+</script>
