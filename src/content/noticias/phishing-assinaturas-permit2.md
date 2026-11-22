@@ -9,7 +9,7 @@ featured: false
 
 Uma solicitação de assinatura pode parecer inofensiva porque não exige o pagamento imediato de gás. Ainda assim, assinaturas estruturadas podem autorizar contratos a movimentar tokens. Esse risco aparece em golpes que imitam aplicações DeFi e exploram mecanismos como o **Permit2**.
 
-Este guia é um checklist prático. Para entender a arquitetura e as diferenças entre SignatureTransfer e AllowanceTransfer, consulte também o artigo [Phishing por meio de assinaturas Permit2](./phishing-permit2-evm).
+Este guia é um checklist prático. Para entender a arquitetura e as diferenças entre SignatureTransfer e AllowanceTransfer, consulte também o artigo [Phishing por meio de assinaturas Permit2](/noticias/phishing-permit2-evm).
 
 ## Antes de conectar a carteira
 
