@@ -66,7 +66,7 @@ A branch foi clonada em uma pasta isolada, sem alterar a pasta original do proje
 
 - Commit de correção editorial validado: `bed7f7c689777f9276d63ecbd8452396b6d64495`.
 - `npm ci`: concluído.
-- `npm test`: **7 testes aprovados, 0 falhas**.
+- `node --test tests/*.js`: **7 testes aprovados, 0 falhas** (o projeto não define script `npm test`).
 - `npm run build`: **concluído com 29 páginas estáticas**.
 - Rotas internas dos artigos principais: verificadas e geradas.
 - Link interno entre os dois guias Permit2: verificado no HTML gerado.
