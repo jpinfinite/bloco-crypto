@@ -66,10 +66,12 @@ A branch foi clonada em uma pasta isolada, sem alterar a pasta original do proje
 
 - Commit validado: `0ced0e7d3f796b78b91ce06868be4a435cab3694`.
 - `npm ci`: concluído.
-- `npm test`: **6 testes aprovados, 0 falhas**.
+- `npm test`: **7 testes aprovados, 0 falhas**.
 - `npm run build`: **concluído com 29 páginas estáticas**.
 - Rotas internas dos artigos principais: verificadas e geradas.
 - Link interno entre os dois guias Permit2: verificado no HTML gerado.
+- Fórmula de perda impermanente: identificado que Astro exibia os delimitadores LaTeX como texto; substituídos por expressão Unicode legível e coberta por teste automatizado.
+- Tabela comparativa Layer 2: confirmada no HTML gerado com cabeçalho e três linhas de redes; falta apenas conferência visual de responsividade em telas estreitas.
 - 11 URLs externas de fontes primárias testadas: 10 responderam HTTP 200; a página da Receita Federal retornou HTTP 403 ao teste automatizado HEAD, embora tenha sido localizada e consultada pelo mecanismo de pesquisa. Isso parece ser restrição automatizada do portal, não evidência de URL inexistente.
 
 ### Aviso de dependências
@@ -78,7 +80,7 @@ A instalação reportou **2 vulnerabilidades moderadas** associadas a dependênc
 
 ## Pendências antes de integrar
 
-- Revisão visual humana das páginas renderizadas, especialmente fórmula matemática e tabela comparativa.
+- Conferir visualmente a tabela comparativa em telas estreitas e a apresentação final da fórmula Unicode em navegadores móveis e desktop.
 - Considerar uma etapa de produto para adicionar `dateModified`, autoria editorial confirmada e política de correções; o schema atual da coleção não possui esses campos.
 - Submeter conteúdo tributário e jurídico a revisão profissional antes de tratá-lo como orientação especializada.
 - Tratar as duas vulnerabilidades moderadas de dependências em uma tarefa técnica separada.

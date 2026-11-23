@@ -21,9 +21,9 @@ A perda impermanente mede a diferença entre o valor da posição mantida no poo
 
 Para uma pool sem taxas, com liquidez distribuída por toda a faixa de preços e sem outras alterações, a perda relativa em função da razão entre o preço final e o inicial do ativo é:
 
-$$\text{IL} = \frac{2\sqrt{r}}{1+r} - 1$$
+**IL = (2 × √r) / (1 + r) − 1**
 
-Em que r = P1/P0.
+Em que r = P1/P0, com P0 como o preço relativo inicial do ativo e P1 como o preço relativo final, medidos em relação ao outro ativo.
 
 Se o preço relativo dobra (r = 2), a posição no pool fica aproximadamente **5,72% abaixo** da estratégia de apenas manter os ativos. Isso não significa necessariamente que o provedor perdeu 5,72% do capital inicial: significa que seu resultado ficou 5,72% abaixo do cenário de referência HODL, antes de considerar taxas e outros custos.
 

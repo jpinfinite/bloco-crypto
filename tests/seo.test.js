@@ -44,6 +44,12 @@ test('robots permite rastreamento e aponta para o sitemap gerado', async () => {
   assert.ok(robots.includes('Sitemap: https://bloco-crypto.pages.dev/sitemap-index.xml'));
 });
 
+test('artigo educacional apresenta a fórmula de perda impermanente sem LaTeX não processado', async () => {
+  const article = await read('../src/content/educacao/o-que-e-impermanent-loss.md');
+  assert.ok(article.includes('**IL = (2 × √r) / (1 + r) − 1**'));
+  assert.ok(!article.includes('$$'));
+});
+
 test('ticker renderiza dados externos como texto', async () => {
   const layout = await read('../src/layouts/BaseLayout.astro');
   assert.ok(layout.includes('tickerText.textContent = items.join'));
