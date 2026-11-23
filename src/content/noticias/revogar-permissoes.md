@@ -1,18 +1,44 @@
 ---
-title: "Aprovações ilimitadas em contratos inteligentes: como auditar e revogar permissões"
-description: "Passo a passo para verificar quais protocolos DeFi ainda têm acesso aos seus tokens ERC-20."
+title: "Aprovações de tokens: como auditar e revogar permissões ERC-20"
+description: "Veja como identificar contratos autorizados a movimentar seus tokens, entender allowances ilimitadas e reduzir permissões desnecessárias."
 pubDate: 2026-11-21
 category: "SEGURANÇA"
-readingTime: "3 min"
+readingTime: "4 min"
 featured: true
 ---
 
-Ao interagir com aplicações descentralizadas (DApps), a assinatura de `approve(address spender, uint256 amount)` muitas vezes concede permissão irrestrita (`type(uint256).max`) para o contrato movimentar seus fundos.
+Ao usar uma aplicação descentralizada, uma carteira pode solicitar uma aprovação ERC-20 para que determinado contrato movimente uma quantidade de tokens em nome do usuário. Essa autorização é conhecida como *allowance* e pode continuar ativa depois que a operação original termina.
 
-## O risco da aprovação infinita
-Mesmo após concluir um swap ou depósito, a permissão permanece gravada no estado do contrato daquele token ERC-20. Caso o protocolo explorado sofra uma vulnerabilidade no futuro, invasores podem drenar os ativos da sua carteira sem exigir novas confirmações.
+## O risco das aprovações ilimitadas
 
-## Como auditar e revogar
-1. Conecte sua carteira em serviços de auditoria on-chain reconhecidos (ex: Revoke.cash ou os scanners nativos de cada rede).
-2. Verifique os contratos aprovados e reduza o limite para zero (`revoke`).
-3. Adote o hábito de aprovar apenas o montante exato necessário para cada transação individual.
+Algumas aplicações solicitam uma permissão muito alta — frequentemente o valor máximo permitido pelo padrão do token — para evitar novas aprovações em operações futuras.
+
+Se o contrato autorizado for comprometido, atualizado de forma maliciosa ou deixar de ser confiável, uma permissão ainda válida pode expor os tokens até o limite autorizado. Isso não significa que qualquer invasão de um protocolo permita movimentar automaticamente todos os ativos: o risco depende do token, do contrato autorizado, do valor e das regras da aplicação.
+
+## Como auditar permissões
+
+1. Acesse uma ferramenta de consulta de aprovações ou o explorador oficial da rede.
+2. Conecte a carteira somente ao domínio correto e confira a rede selecionada.
+3. Revise token, endereço do contrato autorizado e quantidade aprovada.
+4. Identifique permissões antigas ou que não correspondam mais a aplicações utilizadas.
+5. Consulte a documentação do protocolo antes de revogar uma permissão que ainda seja necessária.
+
+## Como revogar
+
+Em ferramentas compatíveis, escolha a autorização específica e solicite a revogação ou a redução do limite. A alteração normalmente exige uma transação on-chain e o pagamento de taxa de rede.
+
+Revogar uma permissão não desfaz transações anteriores, não recupera tokens já transferidos e não garante que uma carteira esteja livre de outros riscos. Verifique também as autorizações em outras redes.
+
+## Permit2 exige atenção adicional
+
+O Permit2 possui módulos próprios para transferências por assinatura e permissões com prazo e limite. Além de revisar a aprovação ERC-20 concedida ao contrato Permit2, o usuário deve compreender as permissões internas que concedeu a cada spender.
+
+Para entender a diferença entre esses mecanismos, leia também nosso guia sobre [phishing e assinaturas Permit2](/noticias/phishing-permit2-evm).
+
+## Fontes
+
+- [Ethereum.org — ERC-20 token standard](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/)
+- [Uniswap — Permit2 overview](https://developers.uniswap.org/docs/protocols/permit2/overview)
+- [Revoke.cash — Token approvals](https://revoke.cash/learn/approvals)
+
+*Nunca informe sua frase-semente ou chave privada a ferramentas de auditoria de permissões. Confirme sempre a rede e o domínio antes de conectar a carteira.*
