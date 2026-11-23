@@ -3,6 +3,21 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@layer components {
+  .prose table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .prose th,
+  .prose td {
+    min-width: 9rem;
+    white-space: normal;
+  }
+}
+
 @theme {
   --font-brand: "Chakra Petch", sans-serif;
   --font-display: "Space Grotesk", sans-serif;

@@ -71,7 +71,7 @@ A branch foi clonada em uma pasta isolada, sem alterar a pasta original do proje
 - Rotas internas dos artigos principais: verificadas e geradas.
 - Link interno entre os dois guias Permit2: verificado no HTML gerado.
 - Fórmula de perda impermanente: identificado que Astro exibia os delimitadores LaTeX como texto; substituídos por expressão Unicode legível e coberta por teste automatizado.
-- Tabela comparativa Layer 2: confirmada no HTML gerado com cabeçalho e três linhas de redes; falta apenas conferência visual de responsividade em telas estreitas.
+- Tabela comparativa Layer 2: confirmada no HTML gerado com cabeçalho e três linhas de redes. Em Chrome headless, testada nas larguras de 320, 390, 768 e 1280 px: a tabela mantém área rolável própria em telas estreitas (576 px de conteúdo em 288/358 px disponíveis), sem overflow horizontal do documento; em 768 e 1280 px, cabe integralmente.
 - 11 URLs externas de fontes primárias testadas: 10 responderam HTTP 200; a página da Receita Federal retornou HTTP 403 ao teste automatizado HEAD, embora tenha sido localizada e consultada pelo mecanismo de pesquisa. Isso parece ser restrição automatizada do portal, não evidência de URL inexistente.
 
 ### Aviso de dependências
@@ -80,7 +80,7 @@ A instalação reportou **2 vulnerabilidades moderadas** associadas a dependênc
 
 ## Pendências antes de integrar
 
-- Conferir visualmente a tabela comparativa em telas estreitas e a apresentação final da fórmula Unicode em navegadores móveis e desktop.
+- Revisão editorial humana final, especialmente dos trechos tributários e jurídicos; a validação automatizada não substitui parecer profissional.
 - Considerar uma etapa de produto para adicionar `dateModified`, autoria editorial confirmada e política de correções; o schema atual da coleção não possui esses campos.
 - Submeter conteúdo tributário e jurídico a revisão profissional antes de tratá-lo como orientação especializada.
 - Tratar as duas vulnerabilidades moderadas de dependências em uma tarefa técnica separada.
