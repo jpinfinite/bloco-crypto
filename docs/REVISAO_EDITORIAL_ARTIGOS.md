@@ -64,7 +64,7 @@ A branch foi clonada em uma pasta isolada, sem alterar a pasta original do proje
 
 `D:\\Bloco-cripto\\bloco-crypto-editorial-check`
 
-- Commit validado: `0ced0e7d3f796b78b91ce06868be4a435cab3694`.
+- Commit de correção editorial validado: `bed7f7c689777f9276d63ecbd8452396b6d64495`.
 - `npm ci`: concluído.
 - `npm test`: **7 testes aprovados, 0 falhas**.
 - `npm run build`: **concluído com 29 páginas estáticas**.
